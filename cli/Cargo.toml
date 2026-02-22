@@ -1,0 +1,8 @@
+[package]
+name = "lightqos-cli"
+version = "0.0.1"
+edition = "2026"
+
+[dependencies]
+lightqos-kernel = { path = "../kernel" }
+clap = { version = "4."
