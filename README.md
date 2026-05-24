@@ -194,7 +194,7 @@ LightQOS is based on concepts from physics, quantum information and advanced mat
 - **Ether Field Abstraction Layer (EFAL)**: a physical-field-inspired abstraction layer for quantum operations
 - **Process Tensor**: formalism for non-Markovian quantum channels with memory
 - **Shadow Tomography**: efficient state and observable reconstruction
-- **TUCU**: Unified Theory of Universal Computing, used as the conceptual foundation for LightQOS
+- **TUCU**: Unified Theory of Universal Consciousness, used as the conceptual foundation for LightQOS
 - **Geometric Algebra GA(3,0)** and **Octonion Algebra**: mathematical foundations used by EFAL
 
 See [`docs/theory/TUCU_FOUNDATIONS.md`](docs/theory/TUCU_FOUNDATIONS.md) for details.
