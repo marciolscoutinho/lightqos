@@ -1,0 +1,23 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# Cargo.toml — Workspace / Crate manifest and dependency configuration
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 02-07-2024
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "lightqos-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lightqos-kernel = { path = "../kernel" }
+clap = { version = "4.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.7"
+
+[[bin]]
+name = "lightqos-cli"
+path = "src/main.rs"
