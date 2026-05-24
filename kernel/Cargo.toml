@@ -1,0 +1,59 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# Cargo.toml — Workspace / Crate manifest and dependency configuration
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 21-06-2026
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "lightqos"
+version = "0.1.0"
+edition = "2021"
+authors = ["LightQOS Team"]
+description = "Light Quantum Operating System - Rust Kernel"
+license = "MIT"
+
+[lib]
+name = "lightqos"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# PyO3 for Python bindings
+pyo3 = { version = "0.20", features = ["extension-module", "abi3-py310"] }
+pyo3-asyncio = { version = "0.20", features = ["tokio-runtime"] }
+
+# Core dependencies
+nalgebra = "0.32"
+num-complex = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.6", features = ["serde", "v4"] }
+thiserror = "1.0"
+
+# Async
+tokio = { version = "1.35", features = ["full"] }
+async-trait = "0.1"
+
+# Random
+rand = "0.8"
+
+# Time
+chrono = "0.4"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "emf_benchmark"
+harness = false
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
+debug = true
