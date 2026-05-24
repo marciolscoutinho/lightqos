@@ -1,0 +1,22 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# Cargo.toml — Workspace / Crate manifest and dependency configuration
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 21-01-2026
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "lightqos-math"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "LightQOS Advanced Mathematical Foundations (Geometric Algebra, Octonions, Hilbert Spaces)"
+
+[dependencies]
+nalgebra = { workspace = true }
+num-complex = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
