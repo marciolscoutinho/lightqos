@@ -11,7 +11,7 @@
 set -e  # Exit on error
 
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║            LightQOS Installation Script                 ║"
+echo "║            LightQOS Installation Script                  ║"
 echo "║                      v0.2.0                              ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
@@ -123,7 +123,7 @@ pytest tests/ -v
 # Success
 echo ""
 echo "╔══════════════════════════════════════════════════════════╗"
-echo "║          ✅ LightQOS installed successfully!            ║"
+echo "║          ✅ LightQOS installed successfully!             ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
 echo "To activate the environment:"
