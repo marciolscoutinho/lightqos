@@ -1,0 +1,24 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# Cargo.toml — Workspace / Crate manifest and dependency configuration
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 01-06-2024
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "lightqos-process-tensor"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "LightQOS Process Tensor Framework (Quantum Combs, Memory Kernels)"
+
+[dependencies]
+lightqos-math = { path = "../math" }
+nalgebra = { workspace = true }
+num-complex = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
