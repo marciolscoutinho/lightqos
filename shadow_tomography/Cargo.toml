@@ -1,0 +1,24 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# Cargo.toml — Workspace / Crate manifest and dependency configuration
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 09-05-2026
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[package]
+name = "lightqos-shadow-tomography"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "LightQOS Shadow Tomography (HIO - Holographic I/O)"
+
+[dependencies]
+lightqos-math = { path = "../math" }
+nalgebra = { workspace = true }
+num-complex = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+rand = { workspace = true }
