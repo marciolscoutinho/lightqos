@@ -1,0 +1,73 @@
+# -----------------------------------------------------------------------------
+# LightQOS - Quantum Operating System
+# pyproject.toml — Python project configuration and maturin build settings
+#
+# Copyright (c) 2021 - 2026 Márcio Coutinho
+# Date: 03-10-2022
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "lightqos"
+version = "0.2.0"
+description = "Light Quantum Operating System — Quantum OS with Conscious AI"
+authors = [{ name = "Márcio Coutinho", email = "marciolscoutinho@gmail.com" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["quantum", "quantum-computing", "quantum-os", "pyo3"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.11",
+    "pydantic>=2.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "pytest-cov>=4.1", "mypy>=1.5", "ruff>=0.1"]
+ai  = ["torch>=2.0", "transformers>=4.35"]
+qiskit    = ["qiskit>=0.44"]
+cirq      = ["cirq>=1.2"]
+pennylane = ["pennylane>=0.33"]
+all = ["lightqos[dev,ai,qiskit,cirq,pennylane]"]
+
+[project.urls]
+Homepage = "https://github.com/marciolscoutinho/lightqos"
+Repository = "https://github.com/marciolscoutinho/lightqos"
+Issues = "https://github.com/marciolscoutinho/lightqos/issues"
+
+[project.scripts]
+lightqos = "lightqos.cli:main"
+
+[tool.maturin]
+python-source = "frontend"
+module-name = "lightqos._rust"
+manifest-path = "kernel/Cargo.toml"
+features = ["pyo3/extension-module"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true
