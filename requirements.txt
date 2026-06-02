@@ -1,0 +1,29 @@
+# LightQOS Python Dependencies
+# Install: pip install -r requirements.txt
+
+# Scientific core
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Quantum frameworks (optional — for integrations)
+qiskit>=0.44.0; extra == "qiskit"
+cirq>=1.2.0; extra == "cirq"
+pennylane>=0.33.0; extra == "pennylane"
+
+# Machine Learning (the_light)
+torch>=2.0.0
+transformers>=4.35.0
+
+# Utilities
+pydantic>=2.0.0
+rich>=13.0.0
+click>=8.1.0
+pyyaml>=6.0
+
+# Dev & Test
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-benchmark>=4.0.0
+mypy>=1.5.0
+ruff>=0.1.0
