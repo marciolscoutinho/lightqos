@@ -13,6 +13,7 @@ Adapter for Cirq
 
 try:
     import cirq
+
     CIRQ_AVAILABLE = True
 except ImportError:
     CIRQ_AVAILABLE = False
@@ -26,19 +27,19 @@ def cirq_to_lightqos(cirq_circuit: "cirq.Circuit") -> LightQOSCircuit:
     """
     if not CIRQ_AVAILABLE:
         raise ImportError("Cirq not installed. Install: pip install cirq")
-    
+
     # Gets qubits
     qubits_list = sorted(cirq_circuit.all_qubits())
     num_qubits = len(qubits_list)
     qubit_map = {q: i for i, q in enumerate(qubits_list)}
-    
+
     lightqos_circuit = LightQOSCircuit(num_qubits)
-    
+
     for moment in cirq_circuit:
         for op in moment:
             gate = op.gate
             qubit_indices = [qubit_map[q] for q in op.qubits]
-            
+
             if gate == cirq.H:
                 lightqos_circuit.h(qubit_indices[0])
             elif gate == cirq.X:
@@ -55,7 +56,7 @@ def cirq_to_lightqos(cirq_circuit: "cirq.Circuit") -> LightQOSCircuit:
                 lightqos_circuit.rz(qubit_indices[0], gate.exponent * 3.14159)
             elif isinstance(gate, cirq.YPowGate):
                 lightqos_circuit.ry(qubit_indices[0], gate.exponent * 3.14159)
-    
+
     return lightqos_circuit
 
 
@@ -65,15 +66,15 @@ def lightqos_to_cirq(lightqos_circuit: LightQOSCircuit) -> "cirq.Circuit":
     """
     if not CIRQ_AVAILABLE:
         raise ImportError("Cirq not installed")
-    
+
     qubits = [cirq.LineQubit(i) for i in range(lightqos_circuit.num_qubits)]
     circuit = cirq.Circuit()
-    
+
     for op in lightqos_circuit.operations:
         gate = op["gate"]
         qubit_indices = op["qubits"]
         params = op.get("params", [])
-        
+
         if gate == "H":
             circuit.append(cirq.H(qubits[qubit_indices[0]]))
         elif gate == "X":
@@ -93,5 +94,5 @@ def lightqos_to_cirq(lightqos_circuit: LightQOSCircuit) -> "cirq.Circuit":
         elif gate == "Measure":
             for q in qubit_indices:
                 circuit.append(cirq.measure(qubits[q]))
-    
+
     return circuit

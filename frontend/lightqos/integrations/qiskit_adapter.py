@@ -13,6 +13,7 @@ Adapter for Qiskit
 
 try:
     from qiskit import QuantumCircuit as QiskitCircuit
+
     QISKIT_AVAILABLE = True
 except ImportError:
     QISKIT_AVAILABLE = False
@@ -23,26 +24,26 @@ from ..circuit import QuantumCircuit as LightQOSCircuit
 def qiskit_to_lightqos(qiskit_circuit: "QiskitCircuit") -> LightQOSCircuit:
     """
     Converts a Qiskit circuit into a LightQOS circuit
-    
+
     Args:
         qiskit_circuit: Qiskit circuit
-        
+
     Returns:
         Equivalent LightQOS circuit
     """
     if not QISKIT_AVAILABLE:
         raise ImportError("Qiskit not installed. Install: pip install qiskit")
-    
+
     # Creates a LightQOS circuit
     num_qubits = qiskit_circuit.num_qubits
     lightqos_circuit = LightQOSCircuit(num_qubits, name=qiskit_circuit.name)
-    
+
     # Converts operations
     for instruction, qargs, cargs in qiskit_circuit.data:
         gate_name = instruction.name
         qubit_indices = [qiskit_circuit.find_bit(q).index for q in qargs]
         params = instruction.params
-        
+
         # Maps gates
         if gate_name == "h":
             lightqos_circuit.h(qubit_indices[0])
@@ -65,30 +66,30 @@ def qiskit_to_lightqos(qiskit_circuit: "QiskitCircuit") -> LightQOSCircuit:
             pass
         else:
             print(f"Warning: Gate '{gate_name}' is not supported, skipping")
-    
+
     return lightqos_circuit
 
 
 def lightqos_to_qiskit(lightqos_circuit: LightQOSCircuit) -> "QiskitCircuit":
     """
     Converts a LightQOS circuit into a Qiskit circuit
-    
+
     Args:
         lightqos_circuit: LightQOS circuit
-        
+
     Returns:
         Equivalent Qiskit circuit
     """
     if not QISKIT_AVAILABLE:
         raise ImportError("Qiskit not installed")
-    
+
     qiskit_circuit = QiskitCircuit(lightqos_circuit.num_qubits)
-    
+
     for op in lightqos_circuit.operations:
         gate = op["gate"]
         qubits = op["qubits"]
         params = op.get("params", [])
-        
+
         if gate == "H":
             qiskit_circuit.h(qubits[0])
         elif gate == "X":
@@ -108,5 +109,5 @@ def lightqos_to_qiskit(lightqos_circuit: LightQOSCircuit) -> "QiskitCircuit":
         elif gate == "Measure":
             for q in qubits:
                 qiskit_circuit.measure(q, q)
-    
+
     return qiskit_circuit

@@ -22,11 +22,12 @@ import sys
 import os
 
 # Add frontend to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "frontend"))
 
 try:
     from lightqos.circuit import QuantumCircuit
     from lightqos.contracts import TemporalContract
+
     SDK_AVAILABLE = True
 except ImportError:
     SDK_AVAILABLE = False
@@ -37,6 +38,7 @@ pytestmark = pytest.mark.skipif(not SDK_AVAILABLE, reason="lightqos SDK not inst
 # =============================================================================
 # TemporalContract
 # =============================================================================
+
 
 class TestTemporalContract:
     """Tests for the temporal contract system."""
@@ -49,7 +51,7 @@ class TestTemporalContract:
         assert not c.fulfilled
 
     def test_priority_clamping(self):
-        c_low  = TemporalContract("X", 50.0, priority=0)
+        c_low = TemporalContract("X", 50.0, priority=0)
         c_high = TemporalContract("X", 50.0, priority=99)
         assert c_low.priority >= 1
         assert c_high.priority <= 10
@@ -57,7 +59,7 @@ class TestTemporalContract:
     def test_id_is_uuid(self):
         c = TemporalContract("H", 100.0)
         assert len(c.id) == 36
-        assert c.id.count('-') == 4
+        assert c.id.count("-") == 4
 
     def test_two_contracts_have_different_ids(self):
         c1 = TemporalContract("H", 100.0)
@@ -87,6 +89,7 @@ class TestTemporalContract:
 # =============================================================================
 # QuantumCircuit — creation and structure
 # =============================================================================
+
 
 class TestQuantumCircuitCreation:
     """Creation and basic structure tests."""
@@ -133,6 +136,7 @@ class TestQuantumCircuitCreation:
 # =============================================================================
 # QuantumCircuit — 1-qubit gates
 # =============================================================================
+
 
 class TestSingleQubitGates:
     """1-qubit gate tests."""
@@ -211,6 +215,7 @@ class TestSingleQubitGates:
 # QuantumCircuit — 2-qubit gates
 # =============================================================================
 
+
 class TestTwoQubitGates:
     """2-qubit gate tests."""
 
@@ -246,16 +251,17 @@ class TestTwoQubitGates:
 
     def test_count_2q_gates(self):
         qc = QuantumCircuit(3)
-        qc.h(0)         # 1Q
-        qc.cnot(0, 1)   # 2Q
-        qc.x(2)         # 1Q
-        qc.cz(1, 2)     # 2Q
+        qc.h(0)  # 1Q
+        qc.cnot(0, 1)  # 2Q
+        qc.x(2)  # 1Q
+        qc.cz(1, 2)  # 2Q
         assert qc.count_2q_gates() == 2
 
 
 # =============================================================================
 # QuantumCircuit — Bell State
 # =============================================================================
+
 
 class TestBellState:
     """Specific tests for Bell states."""
@@ -282,10 +288,10 @@ class TestBellState:
 
     def test_all_four_bell_states_execute(self):
         configs = [
-            ([], []),           # |Φ+⟩
-            ([('z', 0)], []),   # |Φ-⟩
-            ([('x', 1)], []),   # |Ψ+⟩
-            ([('x', 1), ('z', 0)], []),  # |Ψ-⟩
+            ([], []),  # |Φ+⟩
+            ([("z", 0)], []),  # |Φ-⟩
+            ([("x", 1)], []),  # |Ψ+⟩
+            ([("x", 1), ("z", 0)], []),  # |Ψ-⟩
         ]
         for pre_gates, _ in configs:
             qc = QuantumCircuit(2)
@@ -311,6 +317,7 @@ class TestBellState:
 # =============================================================================
 # QuantumCircuit — measurements and execution
 # =============================================================================
+
 
 class TestExecution:
     """Circuit execution tests."""
@@ -390,6 +397,7 @@ class TestExecution:
 # Grover algorithm (integration)
 # =============================================================================
 
+
 class TestGrover:
     """Integration test — 2-qubit Grover."""
 
@@ -401,17 +409,22 @@ class TestGrover:
         qc = QuantumCircuit(2)
 
         # Superposition
-        qc.h(0); qc.h(1)
+        qc.h(0)
+        qc.h(1)
 
         # Oracle: marks |11⟩ with phase -1 (CZ = phase -1 on |11⟩)
         qc.cz(0, 1)
 
         # Diffuser
-        qc.h(0); qc.h(1)
-        qc.x(0); qc.x(1)
+        qc.h(0)
+        qc.h(1)
+        qc.x(0)
+        qc.x(1)
         qc.cz(0, 1)
-        qc.x(0); qc.x(1)
-        qc.h(0); qc.h(1)
+        qc.x(0)
+        qc.x(1)
+        qc.h(0)
+        qc.h(1)
 
         qc.measure([0, 1])
         result = qc.execute(backend="simulator", shots=1024)
@@ -427,6 +440,7 @@ class TestGrover:
 # QuantumCircuit — advanced properties
 # =============================================================================
 
+
 class TestCircuitProperties:
     """Advanced circuit property tests."""
 
@@ -438,7 +452,7 @@ class TestCircuitProperties:
     def test_barrier_does_not_count_as_gate(self):
         qc = QuantumCircuit(2)
         qc.h(0)
-        if hasattr(qc, 'barrier'):
+        if hasattr(qc, "barrier"):
             qc.barrier()
         qc.x(1)
         assert qc.num_gates() == 2

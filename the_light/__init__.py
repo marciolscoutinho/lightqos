@@ -26,12 +26,12 @@ Quick use:
 """
 
 __version__ = "0.2.0"
-__author__  = "Márcio Coutinho"
+__author__ = "Márcio Coutinho"
 
-from .optimizer   import TranspilerOptimizer
-from .predictor   import EMFPredictor
+from .optimizer import TranspilerOptimizer
+from .predictor import EMFPredictor
 from .consciousness_math import ConsciousnessMath
-from .core        import TheLight
+from .core import TheLight
 from .transformer import CircuitTransformer
 
 __all__ = [

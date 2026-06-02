@@ -27,19 +27,25 @@ GitHub: https://github.com/marciolscoutinho/lightqos
 """
 
 __version__ = "0.2.0"
-__author__  = "Márcio Coutinho"
+__author__ = "Márcio Coutinho"
 
-from .circuit   import QuantumCircuit
+from .circuit import QuantumCircuit
 from .contracts import TemporalContract, QoSContract
 
 # Import integrations optionally (Qiskit/Cirq may not be installed)
 try:
-    from .integrations import qiskit_to_lightqos, lightqos_to_qiskit
+    from .integrations import (
+        qiskit_to_lightqos as qiskit_to_lightqos,
+        lightqos_to_qiskit as lightqos_to_qiskit,
+    )
 except ImportError:
     pass
 
 try:
-    from .integrations import cirq_to_lightqos, lightqos_to_cirq
+    from .integrations import (
+        cirq_to_lightqos as cirq_to_lightqos,
+        lightqos_to_cirq as lightqos_to_cirq,
+    )
 except ImportError:
     pass
 
