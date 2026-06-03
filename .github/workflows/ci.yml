@@ -19,7 +19,7 @@ env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
   PYTHON_VERSION: "3.11"
-  RUST_VERSION: "1.81"
+  RUST_VERSION: stable
 
 jobs:
   # ==========================================================================
@@ -40,7 +40,7 @@ jobs:
       - name: Install Rust ${{ env.RUST_VERSION }}
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
           components: clippy, rustfmt
 
       - name: Cache cargo
@@ -141,7 +141,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
 
       - name: Cache cargo
         uses: actions/cache@v4
@@ -186,7 +186,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
 
       - name: Rust benchmarks (criterion)
         run: cargo bench --workspace --no-fail-fast 2>&1 | tee benchmark_results.txt
@@ -250,6 +250,6 @@ jobs:
       - name: Check Rust docs (rustdoc)
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
 
       - run: cargo doc --workspace --no-deps --all-features 2>&1 | grep -E "^error" && exit 1 || true

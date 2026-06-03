@@ -19,7 +19,7 @@ permissions:
 
 env:
   PYTHON_VERSION: "3.11"
-  RUST_VERSION: "1.75"
+  RUST_VERSION: stable
 
 jobs:
   # ==========================================================================
@@ -185,7 +185,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ env.RUST_VERSION }}
+          toolchain: stable
 
       - name: Publish crates (dependency order)
         run: |
