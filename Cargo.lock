@@ -647,6 +647,7 @@ dependencies = [
  "num-complex",
  "pyo3",
  "pyo3-async-runtimes",
+ "pyo3-build-config",
  "rand",
  "serde",
  "serde_json",
