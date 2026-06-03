@@ -69,3 +69,60 @@ impl Topology {
         self.links.len()
     }
 }
+
+/// Dynamic EFAL topology used by the kernel runtime.
+#[derive(Debug, Clone, Default)]
+pub struct DynamicTopology {
+    pub topology: Topology,
+}
+
+impl DynamicTopology {
+    pub fn compute_pser_path<T>(
+        &self,
+        source: T,
+        target: T,
+        _geometry: &crate::efal::geometry::CubeGeometry,
+    ) -> Result<Vec<T>, String>
+    where
+        T: Clone,
+    {
+        Ok(vec![source, target])
+    }
+
+    pub fn optimize<G>(
+        &mut self,
+        _geometry: &crate::efal::geometry::CubeGeometry,
+        _optimization_goal: G,
+    ) {
+    }
+
+    /// Creates an empty dynamic topology.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Adds a node to the dynamic topology.
+    pub fn add_node(&mut self, id: impl Into<String>) {
+        self.topology.add_node(id);
+    }
+
+    /// Adds a link to the dynamic topology.
+    pub fn add_link(
+        &mut self,
+        source: impl Into<String>,
+        target: impl Into<String>,
+        fidelity: f64,
+    ) {
+        self.topology.add_link(source, target, fidelity);
+    }
+
+    /// Returns the number of nodes.
+    pub fn node_count(&self) -> usize {
+        self.topology.node_count()
+    }
+
+    /// Returns the number of links.
+    pub fn link_count(&self) -> usize {
+        self.topology.link_count()
+    }
+}

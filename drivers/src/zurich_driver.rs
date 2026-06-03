@@ -7,8 +7,8 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use uuid::Uuid;
 
 // ============================================================================
@@ -69,7 +69,9 @@ impl std::fmt::Display for ZIError {
         match self {
             ZIError::ConnectionFailed(s) => write!(f, "Connection failed: {}", s),
             ZIError::InvalidChannel(c) => write!(f, "Invalid channel: {}", c),
-            ZIError::FrequencyOutOfRange(freq) => write!(f, "Frequency out of range: {:.2e} Hz", freq),
+            ZIError::FrequencyOutOfRange(freq) => {
+                write!(f, "Frequency out of range: {:.2e} Hz", freq)
+            }
             ZIError::AWGCompileError(msg) => write!(f, "AWG compile error: {}", msg),
             ZIError::TimeoutError => write!(f, "Timeout error"),
             ZIError::CalibrationError => write!(f, "Calibration error"),
@@ -157,7 +159,15 @@ impl ZIPulse {
         duration_ns: u64,
         sample_rate: f64,
     ) -> Result<Self, ZIError> {
-        let mut base = Self::gaussian(channel, center_freq, 0.0, amplitude, sigma_ns, duration_ns, sample_rate)?;
+        let mut base = Self::gaussian(
+            channel,
+            center_freq,
+            0.0,
+            amplitude,
+            sigma_ns,
+            duration_ns,
+            sample_rate,
+        )?;
         let n = base.waveform_i.len();
         let sigma_samples = sigma_ns * sample_rate / 1e9;
         let center = n as f64 / 2.0;
@@ -174,7 +184,15 @@ impl ZIPulse {
 
     /// Creates π pulse (X gate)
     pub fn x_gate(qubit_freq_hz: f64, channel: usize) -> Result<Self, ZIError> {
-        Self::drag(channel, qubit_freq_hz, 1.0, 8.0, 0.5, 40, SHFSG_CHANNELS as f64 * 1e8)
+        Self::drag(
+            channel,
+            qubit_freq_hz,
+            1.0,
+            8.0,
+            0.5,
+            40,
+            SHFSG_CHANNELS as f64 * 1e8,
+        )
     }
 
     /// Validate pulse parameters
@@ -362,7 +380,9 @@ impl ZurichSetup {
 
     /// Sends pulse to a specific instrument
     pub fn send_pulse(&mut self, serial: &str, pulse: ZIPulse) -> Result<(), ZIError> {
-        let instr = self.instruments.get_mut(serial)
+        let instr = self
+            .instruments
+            .get_mut(serial)
             .ok_or_else(|| ZIError::ConnectionFailed(format!("Instrument {} not found", serial)))?;
         instr.queue_pulse(pulse)
     }

@@ -8,55 +8,32 @@
 // ---------------------------------------------------------------------------
 
 pub mod contract;
+pub mod harmonic_scheduler;
 pub mod process_tensor;
 pub mod snapshot;
-pub mod harmonic_scheduler;
 
 // Re-export main structures
 
 // Contracts
 pub use contract::{
-    TemporalContract,
-    FidelityContract,
-    CoherenceContract,
-    BandwidthContract,
-    ContractManager,
-    ContractType,
-    ContractSeverity,
-    TemporalVariant,
-    ValidationResult,
-    ViolationType,
-    ViolationAction,
-    ContractStatistics,
+    BandwidthContract, CoherenceContract, ContractManager, ContractSeverity, ContractStatistics,
+    ContractType, FidelityContract, TemporalContract, TemporalVariant, ValidationResult,
+    ViolationAction, ViolationType,
 };
 
 // Process Tensors
 pub use process_tensor::{
-    ProcessTensor,
-    ProcessTensorBuilder,
-    ProcessTensorCache,
-    NonMarkovianityMetrics,
+    NonMarkovianityMetrics, ProcessTensor, ProcessTensorBuilder, ProcessTensorCache,
 };
 
 // Snapshots
 pub use snapshot::{
-    QuantumSnapshot,
-    SnapshotManager,
-    SnapshotDiff,
-    RollbackResult,
-    ExpirationPolicy,
-    SnapshotStatistics,
-    QuantumTransaction,
-    Operation,
-    GateType,
+    ExpirationPolicy, GateType, Operation, QuantumSnapshot, QuantumTransaction, RollbackResult,
+    SnapshotDiff, SnapshotManager, SnapshotStatistics,
 };
 
 // Scheduler
 pub use harmonic_scheduler::{
-    HarmonicScheduler,
-    QuantumTask,
-    ElectromagneticOctave,
+    ElectromagneticOctave, HarmonicScheduler, QuantumTask, SchedulerConfig, SchedulerStatistics,
     TaskExecutionResult,
-    SchedulerConfig,
-    SchedulerStatistics,
 };

@@ -7,43 +7,26 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
-pub mod shadow_copy;
 pub mod observable_view;
+pub mod shadow_copy;
 pub mod statistical_guarantee;
 
 // Re-export main structures
 
 // Shadow Tomography
 pub use shadow_copy::{
-    QuantumShadow,
-    ShadowCollector,
-    MeasurementSnapshot,
-    PauliString,
-    PauliOperator,
-    ShadowMetadata,
-    SamplingStrategy,
-    CollectorConfig,
-    CollectorStatistics,
+    CollectorConfig, CollectorStatistics, MeasurementSnapshot, PauliOperator, PauliString,
+    QuantumShadow, SamplingStrategy, ShadowCollector, ShadowMetadata,
 };
 
 // Observable Views
 pub use observable_view::{
-    Observable,
-    ObservableView,
-    ViewManager,
-    ObservableFactory,
-    ObservableType,
-    ObservableMetadata,
-    ViewConfig,
-    ViewStatistics,
+    Observable, ObservableFactory, ObservableMetadata, ObservableType, ObservableView, ViewConfig,
+    ViewManager, ViewStatistics,
 };
 
 // Statistical Guarantees
 pub use statistical_guarantee::{
+    ChernoffBound, ConfidenceInterval, ConvergenceAnalyzer, GuaranteedEstimator, HoeffdingBound,
     PACGuarantee,
-    HoeffdingBound,
-    ChernoffBound,
-    ConfidenceInterval,
-    GuaranteedEstimator,
-    ConvergenceAnalyzer,
 };

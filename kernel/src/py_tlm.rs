@@ -9,7 +9,8 @@
 
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use std::time::{Duration, Instant};
+use pyo3::Bound;
+use std::time::Instant;
 use uuid::Uuid;
 
 // ============================================================================
@@ -141,7 +142,12 @@ impl PyContractManager {
 
     /// Creates and registers a simple contract
     #[pyo3(signature = (operation, deadline_ms=100.0, priority=5))]
-    pub fn create_contract(&mut self, operation: String, deadline_ms: f64, priority: u8) -> PyTemporalContract {
+    pub fn create_contract(
+        &mut self,
+        operation: String,
+        deadline_ms: f64,
+        priority: u8,
+    ) -> PyTemporalContract {
         let contract = PyTemporalContract::new(operation, deadline_ms, 0, priority);
         self.contracts.push(contract.clone());
         contract
@@ -162,7 +168,8 @@ impl PyContractManager {
     /// Removes expired contracts; returns the number removed
     pub fn gc_expired(&mut self) -> usize {
         let before = self.contracts.len();
-        let expired: Vec<_> = self.contracts
+        let expired: Vec<_> = self
+            .contracts
             .iter()
             .filter(|c| c.is_expired() && !c.fulfilled)
             .map(|c| c.id.clone())
@@ -175,13 +182,19 @@ impl PyContractManager {
 
     /// Number of active contracts
     pub fn active_count(&self) -> usize {
-        self.contracts.iter().filter(|c| !c.fulfilled && !c.is_expired()).count()
+        self.contracts
+            .iter()
+            .filter(|c| !c.fulfilled && !c.is_expired())
+            .count()
     }
 
     /// Manager statistics
-    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<&'py PyDict> {
+    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         let d = PyDict::new(py);
-        d.set_item("total_registered", self.contracts.len() + self.fulfilled_count + self.expired_count)?;
+        d.set_item(
+            "total_registered",
+            self.contracts.len() + self.fulfilled_count + self.expired_count,
+        )?;
         d.set_item("active", self.active_count())?;
         d.set_item("fulfilled", self.fulfilled_count)?;
         d.set_item("expired", self.expired_count)?;
@@ -191,7 +204,9 @@ impl PyContractManager {
     pub fn __repr__(&self) -> String {
         format!(
             "ContractManager(active={}, fulfilled={}, expired={})",
-            self.active_count(), self.fulfilled_count, self.expired_count
+            self.active_count(),
+            self.fulfilled_count,
+            self.expired_count
         )
     }
 }
@@ -256,7 +271,7 @@ impl PyHarmonicScheduler {
     }
 
     /// Scheduler statistics
-    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<&'py PyDict> {
+    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         let d = PyDict::new(py);
         d.set_item("epoch", self.current_epoch)?;
         d.set_item("epoch_duration_us", self.epoch_duration_us)?;

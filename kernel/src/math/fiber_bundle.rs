@@ -11,13 +11,14 @@ use crate::math::geometric_algebra::GA3D;
 use std::collections::HashMap;
 
 /// Base space, laboratory space-time
+#[derive(Debug, Clone, Default)]
 pub struct SpaceTimeBase {
     /// Spatial dimensions
     pub spatial_dims: usize,
-    
+
     /// Temporal dimension
     pub temporal_dim: usize,
-    
+
     /// Discretization points, for computation
     pub lattice_points: Vec<GA3D>,
 }
@@ -30,7 +31,7 @@ impl SpaceTimeBase {
             lattice_points: Vec::new(),
         }
     }
-    
+
     /// Adds spatial discretization points
     pub fn add_lattice_point(&mut self, point: GA3D) {
         self.lattice_points.push(point);
@@ -41,7 +42,7 @@ impl SpaceTimeBase {
 pub struct Fiber {
     /// Dimension of the local Hilbert space
     pub hilbert_dim: usize,
-    
+
     /// State-space basis
     pub basis: Vec<String>, // Example: ["0", "1"] for a qubit
 }
@@ -54,7 +55,7 @@ impl Fiber {
             basis: vec!["0".to_string(), "1".to_string()],
         }
     }
-    
+
     /// Creates a fiber for a qudit of dimension d
     pub fn qudit(d: usize) -> Self {
         let basis = (0..d).map(|i| i.to_string()).collect();
@@ -63,7 +64,7 @@ impl Fiber {
             basis,
         }
     }
-    
+
     /// Creates a high-dimensional fiber, 37D as in the experiment
     pub fn high_dimensional(d: usize) -> Self {
         Self::qudit(d)
@@ -74,13 +75,13 @@ impl Fiber {
 pub struct FiberBundle {
     /// Base space M, space-time
     pub base: SpaceTimeBase,
-    
+
     /// Typical fiber F
     pub typical_fiber: Fiber,
-    
+
     /// Map from each base point to its fiber
     pub fibers: HashMap<String, Fiber>,
-    
+
     /// Gauge connections between fibers
     pub connections: Vec<Connection>,
 }
@@ -94,12 +95,12 @@ impl FiberBundle {
             connections: Vec::new(),
         }
     }
-    
+
     /// Associates a fiber with a base point
     pub fn attach_fiber(&mut self, point_id: String, fiber: Fiber) {
         self.fibers.insert(point_id, fiber);
     }
-    
+
     /// Adds a gauge connection between two points
     pub fn add_connection(&mut self, from: String, to: String, connection_type: ConnectionType) {
         let conn = Connection {
@@ -108,21 +109,21 @@ impl FiberBundle {
             connection_type,
             gauge_field: GaugeField::identity(),
         };
-        
+
         self.connections.push(conn);
     }
-    
+
     /// Global section, choosing one state in each fiber
     pub fn create_section(&self, state_selector: impl Fn(&str) -> Vec<f64>) -> Section {
         let mut states = HashMap::new();
-        
+
         for (point_id, fiber) in &self.fibers {
             let state = state_selector(point_id);
             if state.len() == fiber.hilbert_dim {
                 states.insert(point_id.clone(), state);
             }
         }
-        
+
         Section { states }
     }
 }
@@ -137,10 +138,10 @@ pub struct Connection {
 
 #[derive(Debug, Clone)]
 pub enum ConnectionType {
-    Optical,      // Optical channel
-    Microwave,   // Microwave
-    Phononic,    // Phonons
-    Virtual,     // Virtual connection, through entanglement
+    Optical,   // Optical channel
+    Microwave, // Microwave
+    Phononic,  // Phonons
+    Virtual,   // Virtual connection, through entanglement
 }
 
 /// Gauge field, connection potential
@@ -157,10 +158,11 @@ impl GaugeField {
             amplitude: 1.0,
         }
     }
-    
+
     /// Applies transport to a state
     pub fn transport(&self, state: &[f64]) -> Vec<f64> {
-        state.iter()
+        state
+            .iter()
             .map(|&s| s * self.amplitude * self.phase.cos())
             .collect()
     }

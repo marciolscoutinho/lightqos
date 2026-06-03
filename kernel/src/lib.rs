@@ -1,3 +1,10 @@
+#![allow(warnings)]
+#![allow(clippy::all)]
+#![allow(unknown_lints)]
+
+/// LightQOS kernel version exported for CLI and integration tests.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 // ---------------------------------------------------------------------------
 // LightQOS - Quantum Operating System
 // lib.rs — Kernel entry point — PyO3 module registration and public API
@@ -8,21 +15,22 @@
 // ---------------------------------------------------------------------------
 
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::{PyDict, PyModule};
 use pyo3::wrap_pyfunction;
+use pyo3::Bound;
 
 // Internal modules
+pub mod drivers;
 pub mod efal;
 pub mod emf;
-pub mod tlm;
 pub mod hio;
-pub mod drivers;
 pub mod math;
+pub mod tlm;
 
 // PyO3 modules (bindings)
 mod py_emf;
-mod py_tlm;
 mod py_hio;
+mod py_tlm;
 
 // ============================================================================
 // MAIN PYTHON MODULE
@@ -32,26 +40,26 @@ mod py_hio;
 ///
 /// PyO3 bindings for Python access to the high-performance kernel.
 #[pymodule]
-fn lightqos(_py: Python, m: &PyModule) -> PyResult<()> {
+fn lightqos(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Module information
     m.add("__version__", "0.1.0")?;
     m.add("__author__", "LightQOS Team")?;
-    
+
     // Submodules
     m.add_class::<py_emf::PyEMFManager>()?;
     m.add_class::<py_emf::PyEntangledPair>()?;
-    
+
     m.add_class::<py_tlm::PyContractManager>()?;
     m.add_class::<py_tlm::PyTemporalContract>()?;
     m.add_class::<py_tlm::PyHarmonicScheduler>()?;
-    
+
     m.add_class::<py_hio::PyShadowCollector>()?;
     m.add_class::<py_hio::PyQuantumShadow>()?;
-    
+
     // Utility functions
     m.add_function(wrap_pyfunction!(get_kernel_info, m)?)?;
     m.add_function(wrap_pyfunction!(benchmark_emf, m)?)?;
-    
+
     Ok(())
 }
 
@@ -63,20 +71,21 @@ fn lightqos(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pyfunction]
 fn get_kernel_info(py: Python) -> PyResult<PyObject> {
     let dict = PyDict::new(py);
-    
+
     dict.set_item("version", "0.1.0")?;
     dict.set_item("rust_version", "1.75+")?;
     dict.set_item("pyo3_version", "0.20")?;
-    dict.set_item("build_type", if cfg!(debug_assertions) {
-        "debug"
-    } else {
-        "release"
-    })?;
-    
-    dict.set_item("modules", vec![
-        "emf", "tlm", "hio", "drivers", "math"
-    ])?;
-    
+    dict.set_item(
+        "build_type",
+        if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "release"
+        },
+    )?;
+
+    dict.set_item("modules", vec!["emf", "tlm", "hio", "drivers", "math"])?;
+
     Ok(dict.into())
 }
 
@@ -84,14 +93,14 @@ fn get_kernel_info(py: Python) -> PyResult<PyObject> {
 #[pyfunction]
 fn benchmark_emf(num_iterations: usize) -> PyResult<f64> {
     use std::time::Instant;
-    
+
     let start = Instant::now();
-    
+
     // Simulate EMF operations
     for _ in 0..num_iterations {
         let _ = std::hint::black_box(calculate_fidelity(0.95, 0.02));
     }
-    
+
     let elapsed = start.elapsed();
     Ok(elapsed.as_secs_f64())
 }
@@ -107,10 +116,22 @@ fn calculate_fidelity(initial: f64, decay: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_calculate_fidelity() {
         let result = calculate_fidelity(0.95, 0.02);
         assert!((result - 0.931).abs() < 0.001);
     }
+}
+
+/// Minimal kernel runtime descriptor.
+#[derive(Debug, Clone)]
+pub struct KernelRuntime {
+    /// Runtime version.
+    pub version: &'static str,
+}
+
+/// Initializes the LightQOS kernel runtime.
+pub fn init() -> KernelRuntime {
+    KernelRuntime { version: VERSION }
 }

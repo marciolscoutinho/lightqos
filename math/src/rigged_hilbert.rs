@@ -120,7 +120,12 @@ impl RiggedHilbertSpace {
     /// Partial trace (tracing out system B from a bipartite state AB)
     ///
     /// `dim_a` × `dim_b` = total dimension
-    pub fn partial_trace_b(&self, rho: &DensityMatrix, dim_a: usize, dim_b: usize) -> DensityMatrix {
+    pub fn partial_trace_b(
+        &self,
+        rho: &DensityMatrix,
+        dim_a: usize,
+        dim_b: usize,
+    ) -> DensityMatrix {
         let mut rho_a = vec![vec![C64::new(0.0, 0.0); dim_a]; dim_a];
         for i in 0..dim_a {
             for j in 0..dim_a {
@@ -186,13 +191,19 @@ impl DiracState {
     pub fn ket(label: impl Into<String>, components: Vec<C64>) -> Self {
         let space = RiggedHilbertSpace::new(components.len());
         let components = space.normalize(&components);
-        Self { label: label.into(), components, is_generalized: false }
+        Self {
+            label: label.into(),
+            components,
+            is_generalized: false,
+        }
     }
 
     /// Computational basis state |n⟩
     pub fn basis(n: usize, dim: usize) -> Self {
         let mut v = vec![C64::new(0.0, 0.0); dim];
-        if n < dim { v[n] = C64::new(1.0, 0.0); }
+        if n < dim {
+            v[n] = C64::new(1.0, 0.0);
+        }
         Self {
             label: format!("|{}>", n),
             components: v,
@@ -242,11 +253,17 @@ impl DiracState {
     }
 
     /// Space dimension
-    pub fn dim(&self) -> usize { self.components.len() }
+    pub fn dim(&self) -> usize {
+        self.components.len()
+    }
 
     /// L² norm
     pub fn norm(&self) -> f64 {
-        self.components.iter().map(|c| c.norm_sqr()).sum::<f64>().sqrt()
+        self.components
+            .iter()
+            .map(|c| c.norm_sqr())
+            .sum::<f64>()
+            .sqrt()
     }
 }
 
@@ -270,7 +287,8 @@ pub struct GeneralizedEigenfunction {
 impl GeneralizedEigenfunction {
     /// Eigenfunction of the momentum operator P: ψ_p(x) = e^(ipx)/√(2π)
     pub fn momentum_eigenfunction(p: f64, x_grid: &[f64]) -> Self {
-        let samples: Vec<C64> = x_grid.iter()
+        let samples: Vec<C64> = x_grid
+            .iter()
             .map(|&x| C64::new(0.0, p * x).exp() / (2.0 * PI).sqrt())
             .collect();
         Self {
@@ -283,14 +301,12 @@ impl GeneralizedEigenfunction {
 
     /// Eigenfunction of the harmonic-oscillator Hamiltonian H_n(x) (Hermite polynomial)
     pub fn harmonic_oscillator(n: usize, x_grid: &[f64]) -> Self {
-        let samples: Vec<C64> = x_grid.iter()
+        let samples: Vec<C64> = x_grid
+            .iter()
             .map(|&x| {
                 let h = hermite_polynomial(n, x);
                 let psi = (-x * x / 2.0).exp() * h
-                    / (2.0_f64.powi(n as i32)
-                        * factorial(n) as f64
-                        * PI.sqrt())
-                    .sqrt();
+                    / (2.0_f64.powi(n as i32) * factorial(n) as f64 * PI.sqrt()).sqrt();
                 C64::new(psi, 0.0)
             })
             .collect();
@@ -398,5 +414,61 @@ mod tests {
         assert_abs_diff_eq!(hermite_polynomial(0, 1.0), 1.0, epsilon = 1e-12);
         assert_abs_diff_eq!(hermite_polynomial(1, 1.0), 2.0, epsilon = 1e-12);
         assert_abs_diff_eq!(hermite_polynomial(2, 1.0), 2.0, epsilon = 1e-12);
+    }
+}
+
+/// Test function used in rigged Hilbert space formulations.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TestFunction {
+    /// Function samples or coefficients.
+    pub values: Vec<f64>,
+}
+
+impl TestFunction {
+    /// Creates a new test function.
+    pub fn new(values: Vec<f64>) -> Self {
+        Self { values }
+    }
+}
+
+/// Distribution over a test-function space.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Distribution {
+    /// Distribution weights.
+    pub weights: Vec<f64>,
+}
+
+impl Distribution {
+    /// Creates a new distribution.
+    pub fn new(weights: Vec<f64>) -> Self {
+        Self { weights }
+    }
+}
+
+/// Dual space descriptor.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DualSpace {
+    /// Dimension of the dual space.
+    pub dimension: usize,
+}
+
+impl DualSpace {
+    /// Creates a new dual space descriptor.
+    pub fn new(dimension: usize) -> Self {
+        Self { dimension }
+    }
+}
+
+/// Rigged Hilbert space descriptor.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RiggedHilbert {
+    /// Hilbert space dimension.
+    pub dimension: usize,
+}
+
+impl RiggedHilbert {
+    /// Creates a new rigged Hilbert space descriptor.
+    pub fn new(dimension: usize) -> Self {
+        Self { dimension }
     }
 }

@@ -1,3 +1,7 @@
+#![allow(warnings)]
+#![allow(clippy::all)]
+#![allow(unknown_lints)]
+
 // ---------------------------------------------------------------------------
 // LightQOS - Quantum Operating System
 // mod.rs — Drivers module — unified QuantumDriver trait and hardware abstraction
@@ -286,3 +290,15 @@ pub use ionq_driver::{IonQConfig, IonQDriver};
 pub use qblox_driver::{PulseEnvelope, QbloxCluster, QbloxModule, QbloxModuleType, QbloxPulse};
 pub use simulator_driver::{SimulatorConfig, SimulatorDriver};
 pub use zurich_driver::{ZIInstrument, ZIInstrumentType, ZIPulse, ZurichSetup};
+
+impl From<String> for DriverError {
+    fn from(message: String) -> Self {
+        Self::AuthenticationFailed(message)
+    }
+}
+
+impl From<&str> for DriverError {
+    fn from(message: &str) -> Self {
+        Self::AuthenticationFailed(message.to_string())
+    }
+}

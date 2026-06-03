@@ -7,10 +7,10 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
-pub mod geometric_algebra;
 pub mod fiber_bundle;
-pub mod rigged_hilbert;
+pub mod geometric_algebra;
 pub mod octave_algebra;
+pub mod rigged_hilbert;
 
 pub use geometric_algebra::GA3D;
 pub use octave_algebra::OctavePosition;

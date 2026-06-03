@@ -24,11 +24,11 @@ pub struct TopologicalDefect {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DefectType {
-    Qubit,              // Standard binary qubit
-    Qudit(usize),       // Qudit of dimension d
-    NetworkNode,        // Quantum network node
-    AncillaQubit,       // Auxiliary qubit, error correction
-    MeasurementPoint,   // Measurement point
+    Qubit,            // Standard binary qubit
+    Qudit(usize),     // Qudit of dimension d
+    NetworkNode,      // Quantum network node
+    AncillaQubit,     // Auxiliary qubit, error correction
+    MeasurementPoint, // Measurement point
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -42,10 +42,10 @@ pub enum DefectStatus {
 
 #[derive(Clone)]
 pub struct DefectMetrics {
-    pub T1: Duration,           // Relaxation time
-    pub T2: Duration,           // Decoherence time
-    pub gate_fidelity: f64,     // Gate fidelity
-    pub readout_fidelity: f64,  // Readout fidelity
+    pub T1: Duration,          // Relaxation time
+    pub T2: Duration,          // Decoherence time
+    pub gate_fidelity: f64,    // Gate fidelity
+    pub readout_fidelity: f64, // Readout fidelity
 }
 
 impl TopologicalDefect {
@@ -59,7 +59,7 @@ impl TopologicalDefect {
             metrics: DefectMetrics::default(),
         }
     }
-    
+
     /// Hilbert-space dimension
     pub fn hilbert_dimension(&self) -> usize {
         match self.defect_type {
@@ -70,33 +70,33 @@ impl TopologicalDefect {
             DefectType::MeasurementPoint => 1,
         }
     }
-    
+
     /// Allocates the defect for use
     pub fn allocate(&mut self) -> Result<(), String> {
         if self.status == DefectStatus::Failed {
             return Err("Cannot allocate failed defect".to_string());
         }
-        
+
         self.status = DefectStatus::InUse;
         Ok(())
     }
-    
+
     /// Releases the defect
     pub fn release(&mut self) {
         self.status = DefectStatus::Idle;
         self.octave_state = OctavePosition::Inertia0;
     }
-    
+
     /// Marks the defect as entangled
     pub fn entangle(&mut self) {
         self.status = DefectStatus::Entangled;
     }
-    
+
     /// Octave transition, used for operations
     pub fn transition_to_octave(&mut self, target: OctavePosition) {
         self.octave_state = target;
     }
-    
+
     /// Checks whether the defect is available
     pub fn is_available(&self) -> bool {
         matches!(self.status, DefectStatus::Idle | DefectStatus::InUse)

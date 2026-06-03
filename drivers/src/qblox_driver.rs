@@ -7,9 +7,9 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Duration;
-use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 // ============================================================================
@@ -103,7 +103,10 @@ pub enum PulseEnvelope {
     /// Cosine raised (COSINE)
     CosineBell,
     /// Arbitrary waveform (I/Q samples)
-    Arbitrary { samples_i: Vec<f64>, samples_q: Vec<f64> },
+    Arbitrary {
+        samples_i: Vec<f64>,
+        samples_q: Vec<f64>,
+    },
 }
 
 impl QbloxPulse {
@@ -278,7 +281,9 @@ impl QbloxModule {
     /// Triggers all armed sequencers
     pub fn trigger(&mut self) -> usize {
         self.status = ModuleStatus::Running;
-        let total: usize = self.sequencers.iter_mut()
+        let total: usize = self
+            .sequencers
+            .iter_mut()
             .filter(|s| s.enabled && !s.pulse_queue.is_empty())
             .map(|s| s.flush())
             .sum();
@@ -324,7 +329,8 @@ impl QbloxCluster {
 
     /// Adds a module to the cluster
     pub fn add_module(&mut self, slot: u8, module_type: QbloxModuleType) {
-        self.modules.insert(slot, QbloxModule::new(slot, module_type));
+        self.modules
+            .insert(slot, QbloxModule::new(slot, module_type));
     }
 
     /// Configures a typical cluster: 4 QCM + 2 QRM
@@ -339,15 +345,21 @@ impl QbloxCluster {
 
     /// Sends a pulse to the correct module
     pub fn send_pulse(&mut self, slot: u8, pulse: QbloxPulse) -> Result<(), QbloxError> {
-        let module = self.modules.get_mut(&slot)
+        let module = self
+            .modules
+            .get_mut(&slot)
             .ok_or(QbloxError::ConnectionLost)?;
         module.send_pulse(pulse)
     }
 
     /// Triggers all modules simultaneously (hardware-synchronized)
     pub fn trigger_all(&mut self) -> usize {
-        self.modules.values_mut()
-            .map(|m| { m.arm(); m.trigger() })
+        self.modules
+            .values_mut()
+            .map(|m| {
+                m.arm();
+                m.trigger()
+            })
             .sum()
     }
 

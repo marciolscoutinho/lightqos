@@ -16,17 +16,18 @@ description = "Light Quantum Operating System - Rust Kernel"
 license = "MIT"
 
 [lib]
-name = "lightqos"
+name = "lightqos_kernel"
 crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
 
 [dependencies]
 # PyO3 for Python bindings
-pyo3 = { version = "0.20", features = ["extension-module", "abi3-py310"] }
-pyo3-asyncio = { version = "0.20", features = ["tokio-runtime"] }
+pyo3 = { version = "0.24.2", features = ["extension-module", "auto-initialize"] }
+pyo3-async-runtimes = { version = "0.24.0", features = ["tokio-runtime"] }
 
 # Core dependencies
-nalgebra = "0.32"
-num-complex = "0.4"
+nalgebra = { version = "0.35", features = ["serde-serialize"] }
+num-complex = { version = "0.4", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 uuid = { version = "1.6", features = ["serde", "v4"] }
@@ -43,6 +44,7 @@ rand = "0.8"
 chrono = "0.4"
 
 [dev-dependencies]
+approx = "0.5"
 criterion = "0.5"
 
 [[bench]]

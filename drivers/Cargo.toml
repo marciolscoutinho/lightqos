@@ -16,8 +16,9 @@ license.workspace = true
 description = "LightQOS Hardware Drivers (IBM, IonQ, Qblox, Zurich Instruments, Photonic)"
 
 [dependencies]
+rand = "0.8"
 lightqos-math = { path = "../math" }
-nalgebra = { workspace = true }
+nalgebra = { workspace = true, features = ["serde-serialize"] }
 num-complex = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

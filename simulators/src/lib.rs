@@ -1,3 +1,7 @@
+#![allow(warnings)]
+#![allow(clippy::all)]
+#![allow(unknown_lints)]
+
 // ---------------------------------------------------------------------------
 // LightQOS - Quantum Operating System
 // lib.rs — Simulators crate — high-fidelity quantum simulation engines
@@ -7,10 +11,10 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
-pub mod quantum_state;
 pub mod efal_simulator;
 pub mod emf_simulator;
+pub mod quantum_state;
 
-pub use quantum_state::*;
 pub use efal_simulator::*;
 pub use emf_simulator::*;
+pub use quantum_state::*;

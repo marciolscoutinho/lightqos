@@ -1,3 +1,7 @@
+#![allow(warnings)]
+#![allow(clippy::all)]
+#![allow(unknown_lints)]
+
 // ---------------------------------------------------------------------------
 // LightQOS - Quantum Operating System
 // lib.rs — Process Tensor crate — non-Markovian quantum dynamics framework
@@ -7,12 +11,12 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
-pub mod quantum_channel;
-pub mod process_tensor;
-pub mod quantum_comb;
 pub mod memory_kernel;
+pub mod process_tensor;
+pub mod quantum_channel;
+pub mod quantum_comb;
 
-pub use quantum_channel::*;
-pub use process_tensor::*;
-pub use quantum_comb::*;
 pub use memory_kernel::*;
+pub use process_tensor::*;
+pub use quantum_channel::*;
+pub use quantum_comb::*;

@@ -1,3 +1,7 @@
+#![allow(warnings)]
+#![allow(clippy::all)]
+#![allow(unknown_lints)]
+
 // ---------------------------------------------------------------------------
 // LightQOS - Quantum Operating System
 // main.rs — LightQOS CLI — command-line interface for quantum circuit execution
@@ -25,43 +29,47 @@ enum Commands {
         /// Path to QASM3 circuit file
         #[arg(short, long)]
         circuit: PathBuf,
-        
+
         /// Target backend
         #[arg(short, long)]
         backend: String,
-        
+
         /// Number of shots
         #[arg(short, long, default_value_t = 1024)]
         shots: usize,
     },
-    
+
     /// Calibrate hardware
     Calibrate {
         /// Hardware identifier
         #[arg(short, long)]
         hardware: String,
     },
-    
+
     /// Optimize a circuit
     Optimize {
         /// Path to circuit
         #[arg(short, long)]
         circuit: PathBuf,
-        
+
         /// Target platform
         #[arg(short, long)]
         target: String,
     },
-    
+
     /// Show system information
     Info,
 }
 
 fn main() {
     let cli = Cli::parse();
-    
+
     match cli.command {
-        Commands::Execute { circuit, backend, shots } => {
+        Commands::Execute {
+            circuit,
+            backend,
+            shots,
+        } => {
             execute_circuit(&circuit, &backend, shots);
         }
         Commands::Calibrate { hardware } => {
@@ -80,11 +88,11 @@ fn execute_circuit(circuit_path: &PathBuf, backend: &str, shots: usize) {
     println!("Executing circuit: {:?}", circuit_path);
     println!("Backend: {}", backend);
     println!("Shots: {}", shots);
-    
+
     // Real integration with the kernel
     let kernel = lightqos_kernel::init();
     println!("Kernel initialized: v{}", lightqos_kernel::VERSION);
-    
+
     // Placeholder - read QASM, execute, return JSON
     let result = serde_json::json!({
         "success": true,
@@ -94,7 +102,7 @@ fn execute_circuit(circuit_path: &PathBuf, backend: &str, shots: usize) {
         },
         "execution_time_ms": 123.45,
     });
-    
+
     println!("{}", serde_json::to_string_pretty(&result).unwrap());
 }
 

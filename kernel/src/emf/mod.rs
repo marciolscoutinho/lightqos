@@ -7,45 +7,25 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
+pub mod entanglement_pool;
 pub mod metrics;
 pub mod pser_routing;
 pub mod recycler;
-pub mod entanglement_pool;
 
 // Re-export main structures
 pub use metrics::{
-    EntangledPairState,
-    EntanglementMetricsCalculator,
-    EMFPoolMetrics,
-    EMFPoolMetricsAggregator,
-    ThermodynamicPhase,
-    ThermodynamicPhaseClassifier,
+    EMFPoolMetrics, EMFPoolMetricsAggregator, EntangledPairState, EntanglementMetricsCalculator,
+    ThermodynamicPhase, ThermodynamicPhaseClassifier,
 };
 
 pub use pser_routing::{
-    PSERRouter,
-    NetworkTopology,
-    NetworkNode,
-    NetworkLink,
-    RoutingRequest,
-    CalculatedRoute,
-    RoutingMetric,
-    RoutingStatistics,
+    CalculatedRoute, NetworkLink, NetworkNode, NetworkTopology, PSERRouter, RoutingMetric,
+    RoutingRequest, RoutingStatistics,
 };
 
 pub use recycler::{
-    EntanglementRecycler,
-    RecyclingPolicy,
-    RecyclingStrategy,
-    RecyclingResult,
-    RecyclerConfig,
-    RecyclingStatistics,
-    EntanglementLifecycleManager,
-    PhaseTransition,
+    EntanglementLifecycleManager, EntanglementRecycler, PhaseTransition, RecyclerConfig,
+    RecyclingPolicy, RecyclingResult, RecyclingStatistics, RecyclingStrategy,
 };
 
-pub use entanglement_pool::{
-    EntanglementPool,
-    PoolConfig,
-    PoolStatistics,
-};
+pub use entanglement_pool::{EntanglementPool, PoolConfig, PoolStatistics};

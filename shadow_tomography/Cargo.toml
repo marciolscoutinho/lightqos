@@ -16,8 +16,10 @@ license.workspace = true
 description = "LightQOS Shadow Tomography (HIO - Holographic I/O)"
 
 [dependencies]
+ndarray = "0.15"
+uuid = { version = "1", features = ["v4", "serde"] }
 lightqos-math = { path = "../math" }
-nalgebra = { workspace = true }
+nalgebra = { workspace = true, features = ["serde-serialize"] }
 num-complex = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }

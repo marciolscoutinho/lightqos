@@ -38,7 +38,7 @@ impl OctavePosition {
             OctavePosition::Radiation4Minus => -4,
         }
     }
-    
+
     /// Creates an octave position from an index
     pub fn from_index(index: i8) -> Option<Self> {
         match index {
@@ -54,38 +54,38 @@ impl OctavePosition {
             _ => None,
         }
     }
-    
+
     /// Harmonic multiplier, used for temporal scheduling.
     /// Based on musical and physical frequency relationships.
     pub fn harmonic_multiplier(&self) -> f64 {
         match self {
-            OctavePosition::Generation4Plus => 16.0,  // 2^4
-            OctavePosition::Generation3Plus => 8.0,   // 2^3
-            OctavePosition::Generation2Plus => 4.0,   // 2^2
-            OctavePosition::Generation1Plus => 2.0,   // 2^1
-            OctavePosition::Inertia0 => 1.0,          // 2^0
-            OctavePosition::Radiation1Minus => 0.5,   // 2^-1
-            OctavePosition::Radiation2Minus => 0.25,  // 2^-2
-            OctavePosition::Radiation3Minus => 0.125, // 2^-3
-            OctavePosition::Radiation4Minus => 0.0625,// 2^-4
+            OctavePosition::Generation4Plus => 16.0,   // 2^4
+            OctavePosition::Generation3Plus => 8.0,    // 2^3
+            OctavePosition::Generation2Plus => 4.0,    // 2^2
+            OctavePosition::Generation1Plus => 2.0,    // 2^1
+            OctavePosition::Inertia0 => 1.0,           // 2^0
+            OctavePosition::Radiation1Minus => 0.5,    // 2^-1
+            OctavePosition::Radiation2Minus => 0.25,   // 2^-2
+            OctavePosition::Radiation3Minus => 0.125,  // 2^-3
+            OctavePosition::Radiation4Minus => 0.0625, // 2^-4
         }
     }
-    
+
     /// Returns whether this position is in the Generation phase
     pub fn is_generation(&self) -> bool {
         self.as_index() > 0
     }
-    
+
     /// Returns whether this position is in the Radiation phase
     pub fn is_radiation(&self) -> bool {
         self.as_index() < 0
     }
-    
+
     /// Returns whether this position is the Inertia point
     pub fn is_inertia(&self) -> bool {
         self.as_index() == 0
     }
-    
+
     /// Transitions to the next octave, completing the cycle
     pub fn next(&self) -> Option<Self> {
         let current = self.as_index();
@@ -95,7 +95,7 @@ impl OctavePosition {
             OctavePosition::from_index(current - 1)
         }
     }
-    
+
     /// Transitions to the previous octave
     pub fn previous(&self) -> Option<Self> {
         let current = self.as_index();
@@ -109,17 +109,21 @@ impl OctavePosition {
 
 impl fmt::Display for OctavePosition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", match self {
-            OctavePosition::Generation4Plus => "4+",
-            OctavePosition::Generation3Plus => "3+",
-            OctavePosition::Generation2Plus => "2+",
-            OctavePosition::Generation1Plus => "1+",
-            OctavePosition::Inertia0 => "0=",
-            OctavePosition::Radiation1Minus => "1-",
-            OctavePosition::Radiation2Minus => "2-",
-            OctavePosition::Radiation3Minus => "3-",
-            OctavePosition::Radiation4Minus => "4-",
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                OctavePosition::Generation4Plus => "4+",
+                OctavePosition::Generation3Plus => "3+",
+                OctavePosition::Generation2Plus => "2+",
+                OctavePosition::Generation1Plus => "1+",
+                OctavePosition::Inertia0 => "0=",
+                OctavePosition::Radiation1Minus => "1-",
+                OctavePosition::Radiation2Minus => "2-",
+                OctavePosition::Radiation3Minus => "3-",
+                OctavePosition::Radiation4Minus => "4-",
+            }
+        )
     }
 }
 
@@ -144,24 +148,27 @@ impl OctaveCycle {
             ],
         }
     }
-    
+
     /// Returns all positions in order
     pub fn all_positions(&self) -> &[OctavePosition] {
         &self.positions
     }
-    
+
     /// Computes the relative pressure at each octave.
     /// P_exp ∝ d², P_con ∝ 1/d²
     pub fn pressure_profile(&self, base_distance: f64) -> Vec<(OctavePosition, f64, f64)> {
-        self.positions.iter().map(|pos| {
-            let multiplier = pos.harmonic_multiplier();
-            let distance = base_distance * multiplier;
-            
-            let p_expansion = distance * distance;
-            let p_contraction = 1.0 / (distance * distance + 1e-10);
-            
-            (*pos, p_expansion, p_contraction)
-        }).collect()
+        self.positions
+            .iter()
+            .map(|pos| {
+                let multiplier = pos.harmonic_multiplier();
+                let distance = base_distance * multiplier;
+
+                let p_expansion = distance * distance;
+                let p_contraction = 1.0 / (distance * distance + 1e-10);
+
+                (*pos, p_expansion, p_contraction)
+            })
+            .collect()
     }
 }
 
@@ -180,39 +187,36 @@ pub fn transition_energy(from: OctavePosition, to: OctavePosition, base_energy: 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_octave_cycle() {
         let mut pos = OctavePosition::Generation4Plus;
-        let mut count = 0;
-        
-        while let Some(next_pos) = pos.next() {
-            count += 1;
-            pos = next_pos;
-            
-            if count > 10 {
-                break; // Avoids infinite loop
-            }
+
+        for _ in 0..9 {
+            pos = pos.next().expect("octave cycle should continue");
         }
-        
-        assert_eq!(count, 9); // 9 transitions in the cycle
+
+        assert_eq!(pos, OctavePosition::Generation4Plus);
     }
-    
+
     #[test]
     fn test_harmonic_multipliers() {
         assert_eq!(OctavePosition::Generation4Plus.harmonic_multiplier(), 16.0);
         assert_eq!(OctavePosition::Inertia0.harmonic_multiplier(), 1.0);
-        assert_eq!(OctavePosition::Radiation4Minus.harmonic_multiplier(), 0.0625);
+        assert_eq!(
+            OctavePosition::Radiation4Minus.harmonic_multiplier(),
+            0.0625
+        );
     }
-    
+
     #[test]
     fn test_transition_energy() {
         let energy = transition_energy(
             OctavePosition::Inertia0,
             OctavePosition::Generation4Plus,
-            100.0
+            100.0,
         );
-        
+
         assert_eq!(energy, 400.0); // 4 octaves × 100
     }
 }

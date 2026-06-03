@@ -16,7 +16,10 @@ license.workspace = true
 description = "LightQOS Advanced Mathematical Foundations (Geometric Algebra, Octonions, Hilbert Spaces)"
 
 [dependencies]
-nalgebra = { workspace = true }
-num-complex = { workspace = true }
+nalgebra = { workspace = true, features = ["serde-serialize"] }
+num-complex = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
 thiserror = { workspace = true }
+
+[dev-dependencies]
+approx = "0.5"

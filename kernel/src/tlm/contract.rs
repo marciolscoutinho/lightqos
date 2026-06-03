@@ -7,9 +7,9 @@
 // All rights reserved.
 // ---------------------------------------------------------------------------
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
-use serde::{Serialize, Deserialize};
+use std::time::Instant;
 use uuid::Uuid;
 
 // ============================================================================
@@ -21,13 +21,13 @@ use uuid::Uuid;
 pub enum ContractType {
     /// Temporal contract (timing)
     Temporal,
-    
+
     /// Fidelity contract (quality)
     Fidelity,
-    
+
     /// Coherence contract (phase)
     Coherence,
-    
+
     /// Bandwidth contract (throughput)
     Bandwidth,
 }
@@ -37,13 +37,13 @@ pub enum ContractType {
 pub enum ContractSeverity {
     /// Critical - failure is unacceptable
     Critical = 4,
-    
+
     /// High - requires immediate action
     High = 3,
-    
+
     /// Medium - requires warning
     Medium = 2,
-    
+
     /// Low - best effort
     Low = 1,
 }
@@ -57,31 +57,32 @@ pub enum ContractSeverity {
 pub struct TemporalContract {
     /// Unique contract ID
     pub id: Uuid,
-    
+
     /// Contract name
     pub name: String,
-    
+
     /// Tipo: Strict, Flexible, Relaxed
     pub variant: TemporalVariant,
-    
+
     /// Maximum allowed duration (nanoseconds)
     pub max_duration_ns: u64,
-    
+
     /// Tolerance (±nanoseconds)
     pub tolerance_ns: u64,
-    
+
     /// Absolute deadline (optional)
+    #[serde(skip, default)]
     pub deadline: Option<Instant>,
-    
+
     /// Scheduler priority
     pub priority: u8,
-    
+
     /// Severity
     pub severity: ContractSeverity,
-    
+
     /// Phase window (radians)
     pub phase_window_rad: Option<f64>,
-    
+
     /// Allow rollback in case of violation?
     pub allow_rollback: bool,
 }
@@ -90,10 +91,10 @@ pub struct TemporalContract {
 pub enum TemporalVariant {
     /// Strict: no tolerance, maximum priority
     Strict,
-    
+
     /// Flexible: with tolerance, medium priority
     Flexible,
-    
+
     /// Relaxed: high tolerance, low priority
     Relaxed,
 }
@@ -105,16 +106,16 @@ impl TemporalContract {
             id: Uuid::new_v4(),
             name: "strict_timing".to_string(),
             variant: TemporalVariant::Strict,
-            max_duration_ns: 100,  // 100ns default
+            max_duration_ns: 100, // 100ns default
             tolerance_ns: 0,
             deadline: None,
-            priority: 255,  // Maximum priority
+            priority: 255, // Maximum priority
             severity: ContractSeverity::Critical,
-            phase_window_rad: Some(0.01),  // ±0.01 rad
+            phase_window_rad: Some(0.01), // ±0.01 rad
             allow_rollback: true,
         }
     }
-    
+
     /// Creates a Flexible contract (with tolerance)
     pub fn flexible(tolerance_ns: u64) -> Self {
         Self {
@@ -130,7 +131,7 @@ impl TemporalContract {
             allow_rollback: true,
         }
     }
-    
+
     /// Creates a Relaxed contract (high tolerance)
     pub fn relaxed(tolerance_ns: u64) -> Self {
         Self {
@@ -146,11 +147,11 @@ impl TemporalContract {
             allow_rollback: false,
         }
     }
-    
+
     /// Validates whether a duration satisfies the contract
     pub fn validate_duration(&self, actual_duration_ns: u64) -> ValidationResult {
         let upper_bound = self.max_duration_ns + self.tolerance_ns;
-        
+
         if actual_duration_ns <= upper_bound {
             ValidationResult::Success
         } else {
@@ -161,19 +162,21 @@ impl TemporalContract {
                 severity: self.severity,
                 details: format!(
                     "Duration {} ns exceeds limit {} ns (violation: {} ns)",
-                    actual_duration_ns,
-                    upper_bound,
-                    violation_ns
+                    actual_duration_ns, upper_bound, violation_ns
                 ),
             }
         }
     }
-    
+
     /// Validates phase
-    pub fn validate_phase(&self, actual_phase_rad: f64, expected_phase_rad: f64) -> ValidationResult {
+    pub fn validate_phase(
+        &self,
+        actual_phase_rad: f64,
+        expected_phase_rad: f64,
+    ) -> ValidationResult {
         if let Some(window) = self.phase_window_rad {
             let phase_error = (actual_phase_rad - expected_phase_rad).abs();
-            
+
             if phase_error <= window {
                 ValidationResult::Success
             } else {
@@ -183,8 +186,7 @@ impl TemporalContract {
                     severity: self.severity,
                     details: format!(
                         "Phase error {:.4} rad exceeds window {:.4} rad",
-                        phase_error,
-                        window
+                        phase_error, window
                     ),
                 }
             }
@@ -203,22 +205,22 @@ impl TemporalContract {
 pub struct FidelityContract {
     /// Unique ID
     pub id: Uuid,
-    
+
     /// Nome
     pub name: String,
-    
+
     /// Minimum required fidelity [0, 1]
     pub min_fidelity: f64,
-    
+
     /// Maximum number of attempts (retries)
     pub max_retries: usize,
-    
+
     /// Automatic optimization if it fails?
     pub auto_optimize: bool,
-    
+
     /// Severity
     pub severity: ContractSeverity,
-    
+
     /// Fidelity metric
     pub metric: FidelityMetric,
 }
@@ -227,13 +229,13 @@ pub struct FidelityContract {
 pub enum FidelityMetric {
     /// State fidelity
     State,
-    
+
     /// Process fidelity
     Process,
-    
+
     /// Gate fidelity
     Gate,
-    
+
     /// Entanglement fidelity
     Entanglement,
 }
@@ -251,7 +253,7 @@ impl FidelityContract {
             metric: FidelityMetric::State,
         }
     }
-    
+
     /// Validates fidelity
     pub fn validate_fidelity(&self, actual_fidelity: f64) -> ValidationResult {
         if actual_fidelity >= self.min_fidelity {
@@ -281,16 +283,16 @@ impl FidelityContract {
 pub struct CoherenceContract {
     /// Unique ID
     pub id: Uuid,
-    
+
     /// Minimum coherence time (microseconds)
     pub min_coherence_time_us: f64,
-    
+
     /// Covered qubits
     pub qubits: Vec<usize>,
-    
+
     /// Allow dynamic correction?
     pub allow_dynamic_correction: bool,
-    
+
     /// Severity
     pub severity: ContractSeverity,
 }
@@ -305,7 +307,7 @@ impl CoherenceContract {
             severity: ContractSeverity::High,
         }
     }
-    
+
     /// Validates coherence time
     pub fn validate_coherence(&self, actual_coherence_us: f64) -> ValidationResult {
         if actual_coherence_us >= self.min_coherence_time_us {
@@ -317,8 +319,7 @@ impl CoherenceContract {
                 severity: self.severity,
                 details: format!(
                     "Coherence {:.2} μs below minimum {:.2} μs",
-                    actual_coherence_us,
-                    self.min_coherence_time_us
+                    actual_coherence_us, self.min_coherence_time_us
                 ),
             }
         }
@@ -334,13 +335,13 @@ impl CoherenceContract {
 pub struct BandwidthContract {
     /// Unique ID
     pub id: Uuid,
-    
+
     /// Quantum operations per second (minimum)
     pub min_ops_per_second: f64,
-    
+
     /// Entanglement rate (EPR pairs/second)
     pub min_epr_rate: Option<f64>,
-    
+
     /// Severity
     pub severity: ContractSeverity,
 }
@@ -354,7 +355,7 @@ impl BandwidthContract {
             severity: ContractSeverity::Medium,
         }
     }
-    
+
     /// Validates throughput
     pub fn validate_throughput(&self, actual_ops_per_second: f64) -> ValidationResult {
         if actual_ops_per_second >= self.min_ops_per_second {
@@ -366,8 +367,7 @@ impl BandwidthContract {
                 severity: self.severity,
                 details: format!(
                     "Throughput {:.1} ops/s below target {:.1} ops/s",
-                    actual_ops_per_second,
-                    self.min_ops_per_second
+                    actual_ops_per_second, self.min_ops_per_second
                 ),
             }
         }
@@ -383,7 +383,7 @@ impl BandwidthContract {
 pub enum ValidationResult {
     /// Contract fulfilled
     Success,
-    
+
     /// Contract violated
     Violation {
         contract_id: Uuid,
@@ -407,7 +407,7 @@ impl ValidationResult {
     pub fn is_success(&self) -> bool {
         matches!(self, ValidationResult::Success)
     }
-    
+
     /// Gets severity (None if successful)
     pub fn severity(&self) -> Option<ContractSeverity> {
         match self {
@@ -425,25 +425,26 @@ impl ValidationResult {
 pub struct ContractManager {
     /// Active temporal contracts
     temporal_contracts: HashMap<Uuid, TemporalContract>,
-    
+
     /// Active fidelity contracts
     fidelity_contracts: HashMap<Uuid, FidelityContract>,
-    
+
     /// Active coherence contracts
     coherence_contracts: HashMap<Uuid, CoherenceContract>,
-    
+
     /// Active bandwidth contracts
     bandwidth_contracts: HashMap<Uuid, BandwidthContract>,
-    
+
     /// Violation history
     violation_history: Vec<ViolationRecord>,
-    
+
     /// Statistics
     stats: ContractStatistics,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ViolationRecord {
+    #[serde(skip, default = "Instant::now")]
     pub timestamp: Instant,
     pub contract_id: Uuid,
     pub contract_type: ContractType,
@@ -457,16 +458,16 @@ pub struct ViolationRecord {
 pub enum ViolationAction {
     /// No action (logged only)
     None,
-    
+
     /// Rollback to snapshot
     Rollback,
-    
+
     /// Retry operation
     Retry,
-    
+
     /// Optimization applied
     Optimize,
-    
+
     /// Operation aborted
     Abort,
 }
@@ -492,43 +493,43 @@ impl ContractManager {
             stats: ContractStatistics::default(),
         }
     }
-    
+
     // ========================================================================
     // CONTRACT REGISTRATION
     // ========================================================================
-    
+
     /// Registers temporal contract
     pub fn register_temporal(&mut self, contract: TemporalContract) -> Uuid {
         let id = contract.id;
         self.temporal_contracts.insert(id, contract);
         id
     }
-    
+
     /// Registers fidelity contract
     pub fn register_fidelity(&mut self, contract: FidelityContract) -> Uuid {
         let id = contract.id;
         self.fidelity_contracts.insert(id, contract);
         id
     }
-    
+
     /// Registers coherence contract
     pub fn register_coherence(&mut self, contract: CoherenceContract) -> Uuid {
         let id = contract.id;
         self.coherence_contracts.insert(id, contract);
         id
     }
-    
+
     /// Registers bandwidth contract
     pub fn register_bandwidth(&mut self, contract: BandwidthContract) -> Uuid {
         let id = contract.id;
         self.bandwidth_contracts.insert(id, contract);
         id
     }
-    
+
     // ========================================================================
     // VALIDATION
     // ========================================================================
-    
+
     /// Validates all temporal contracts for an operation
     pub fn validate_temporal_all(
         &mut self,
@@ -536,29 +537,30 @@ impl ContractManager {
         phase_rad: Option<f64>,
     ) -> Vec<ValidationResult> {
         self.stats.total_validations += self.temporal_contracts.len() as u64;
-        
+
         let mut results = Vec::new();
-        
-        for contract in self.temporal_contracts.values() {
+
+        for contract in self
+            .temporal_contracts
+            .values()
+            .cloned()
+            .collect::<Vec<_>>()
+        {
             // Validate duration
             let result = contract.validate_duration(duration_ns);
-            
+
             if !result.is_success() {
-                self.handle_violation(
-                    ContractType::Temporal,
-                    &result,
-                    contract.allow_rollback,
-                );
+                self.handle_violation(ContractType::Temporal, &result, contract.allow_rollback);
             } else {
                 self.stats.successful_validations += 1;
             }
-            
+
             results.push(result);
-            
+
             // Validate phase (if applicable)
             if let Some(actual_phase) = phase_rad {
                 let phase_result = contract.validate_phase(actual_phase, 0.0);
-                
+
                 if !phase_result.is_success() {
                     self.handle_violation(
                         ContractType::Temporal,
@@ -566,14 +568,14 @@ impl ContractManager {
                         contract.allow_rollback,
                     );
                 }
-                
+
                 results.push(phase_result);
             }
         }
-        
+
         results
     }
-    
+
     /// Validates a specific fidelity contract
     pub fn validate_fidelity(
         &mut self,
@@ -581,30 +583,26 @@ impl ContractManager {
         actual_fidelity: f64,
     ) -> ValidationResult {
         self.stats.total_validations += 1;
-        
+
         if let Some(contract) = self.fidelity_contracts.get(&contract_id) {
             let result = contract.validate_fidelity(actual_fidelity);
-            
+
             if !result.is_success() {
-                self.handle_violation(
-                    ContractType::Fidelity,
-                    &result,
-                    contract.auto_optimize,
-                );
+                self.handle_violation(ContractType::Fidelity, &result, contract.auto_optimize);
             } else {
                 self.stats.successful_validations += 1;
             }
-            
+
             result
         } else {
-            ValidationResult::Success  // Contract not found = no restriction
+            ValidationResult::Success // Contract not found = no restriction
         }
     }
-    
+
     // ========================================================================
     // VIOLATION HANDLING
     // ========================================================================
-    
+
     fn handle_violation(
         &mut self,
         contract_type: ContractType,
@@ -619,11 +617,11 @@ impl ContractManager {
         } = result
         {
             self.stats.total_violations += 1;
-            
+
             if *severity == ContractSeverity::Critical {
                 self.stats.critical_violations += 1;
             }
-            
+
             // Decide action
             let action = if allow_corrective_action {
                 match violation_type {
@@ -644,7 +642,7 @@ impl ContractManager {
             } else {
                 ViolationAction::None
             };
-            
+
             // Register violation
             let record = ViolationRecord {
                 timestamp: Instant::now(),
@@ -655,20 +653,20 @@ impl ContractManager {
                 details: details.clone(),
                 action_taken: action,
             };
-            
+
             self.violation_history.push(record);
         }
     }
-    
+
     // ========================================================================
     // QUERIES
     // ========================================================================
-    
+
     /// Gets statistics
     pub fn get_statistics(&self) -> &ContractStatistics {
         &self.stats
     }
-    
+
     /// Gets recent violations
     pub fn get_recent_violations(&self, limit: usize) -> &[ViolationRecord] {
         let len = self.violation_history.len();
@@ -678,7 +676,7 @@ impl ContractManager {
             &self.violation_history[len - limit..]
         }
     }
-    
+
     /// Gets success rate
     pub fn success_rate(&self) -> f64 {
         if self.stats.total_validations == 0 {
@@ -687,7 +685,7 @@ impl ContractManager {
             self.stats.successful_validations as f64 / self.stats.total_validations as f64
         }
     }
-    
+
     /// Clears expired contracts
     pub fn cleanup_expired(&mut self) {
         // TODO: Implement timestamp-based expiration logic
@@ -707,85 +705,82 @@ impl Default for ContractManager {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_temporal_contract_strict() {
         let contract = TemporalContract::strict();
-        
+
         assert_eq!(contract.variant, TemporalVariant::Strict);
         assert_eq!(contract.tolerance_ns, 0);
         assert_eq!(contract.priority, 255);
-        
+
         // Validate duration within the limit
         let result = contract.validate_duration(50);
         assert!(result.is_success());
-        
+
         // Validate exceeded duration
         let result = contract.validate_duration(200);
         assert!(!result.is_success());
     }
-    
+
     #[test]
     fn test_fidelity_contract() {
         let contract = FidelityContract::new(0.95, 5);
-        
+
         // Fidelity above the minimum
         let result = contract.validate_fidelity(0.97);
         assert!(result.is_success());
-        
+
         // Fidelity below the minimum
         let result = contract.validate_fidelity(0.90);
         assert!(!result.is_success());
-        assert_eq!(
-            result.severity(),
-            Some(ContractSeverity::High)
-        );
+        assert_eq!(result.severity(), Some(ContractSeverity::High));
     }
-    
+
     #[test]
     fn test_contract_manager() {
         let mut manager = ContractManager::new();
-        
+
         // Register contract
         let contract = TemporalContract::strict();
         let id = manager.register_temporal(contract);
-        
+
         assert_eq!(manager.temporal_contracts.len(), 1);
-        
+
         // Validate
         let results = manager.validate_temporal_all(50, None);
         assert_eq!(results.len(), 1);
         assert!(results[0].is_success());
-        
+
         // Statistics
         let stats = manager.get_statistics();
         assert_eq!(stats.total_validations, 1);
         assert_eq!(stats.successful_validations, 1);
         assert_eq!(stats.total_violations, 0);
     }
-    
+
     #[test]
     fn test_violation_handling() {
         let mut manager = ContractManager::new();
-        
+
         let contract = TemporalContract::strict();
         manager.register_temporal(contract);
-        
+
         // Cause violation
         let results = manager.validate_temporal_all(500, None);
-        
+
         assert!(!results[0].is_success());
         assert_eq!(manager.stats.total_violations, 1);
         assert_eq!(manager.violation_history.len(), 1);
     }
-    
+
     #[test]
     fn test_success_rate() {
         let mut manager = ContractManager::new();
-        
+
         manager.stats.total_validations = 100;
         manager.stats.successful_validations = 95;
-        
+
         let rate = manager.success_rate();
         assert!((rate - 0.95).abs() < 0.001);
     }

@@ -17,7 +17,7 @@ description = "LightQOS Quantum Protocols (T-HQC, QCR, QLC, ZPE)"
 
 [dependencies]
 lightqos-math = { path = "../math" }
-nalgebra = { workspace = true }
+nalgebra = { workspace = true, features = ["serde-serialize"] }
 num-complex = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }

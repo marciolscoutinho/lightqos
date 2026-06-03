@@ -8,7 +8,8 @@
 // ---------------------------------------------------------------------------
 
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::PyDict;
+use pyo3::Bound;
 use uuid::Uuid;
 
 // ============================================================================
@@ -34,8 +35,9 @@ pub struct PyQuantumShadow {
 impl PyQuantumShadow {
     #[new]
     pub fn new(num_qubits: usize, measurement_bits: Vec<u8>, clifford_index: u32) -> Self {
-        let fidelity = 1.0 - (measurement_bits.iter().map(|&b| b as f64).sum::<f64>()
-            / (num_qubits as f64 + 1.0)) * 0.1;
+        let fidelity = 1.0
+            - (measurement_bits.iter().map(|&b| b as f64).sum::<f64>() / (num_qubits as f64 + 1.0))
+                * 0.1;
 
         Self {
             id: Uuid::new_v4().to_string(),
@@ -46,28 +48,42 @@ impl PyQuantumShadow {
             timestamp_ms: std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap_or_default()
-                .as_secs_f64() * 1000.0,
+                .as_secs_f64()
+                * 1000.0,
         }
     }
 
     #[getter]
-    pub fn id(&self) -> &str { &self.id }
+    pub fn id(&self) -> &str {
+        &self.id
+    }
 
     #[getter]
-    pub fn num_qubits(&self) -> usize { self.num_qubits }
+    pub fn num_qubits(&self) -> usize {
+        self.num_qubits
+    }
 
     #[getter]
-    pub fn measurement_bits(&self) -> Vec<u8> { self.measurement_bits.clone() }
+    pub fn measurement_bits(&self) -> Vec<u8> {
+        self.measurement_bits.clone()
+    }
 
     #[getter]
-    pub fn clifford_index(&self) -> u32 { self.clifford_index }
+    pub fn clifford_index(&self) -> u32 {
+        self.clifford_index
+    }
 
     #[getter]
-    pub fn fidelity_estimate(&self) -> f64 { self.fidelity_estimate }
+    pub fn fidelity_estimate(&self) -> f64 {
+        self.fidelity_estimate
+    }
 
     /// Bit string of measurement results (e.g. "010110")
     pub fn bitstring(&self) -> String {
-        self.measurement_bits.iter().map(|b| b.to_string()).collect()
+        self.measurement_bits
+            .iter()
+            .map(|b| b.to_string())
+            .collect()
     }
 
     pub fn __repr__(&self) -> String {
@@ -126,7 +142,9 @@ impl PyShadowCollector {
     pub fn measure(&mut self, bits: Vec<u8>, clifford_index: u32) -> PyResult<PyQuantumShadow> {
         if bits.len() != self.num_qubits {
             return Err(pyo3::exceptions::PyValueError::new_err(format!(
-                "Expected {} bits, got {}", self.num_qubits, bits.len()
+                "Expected {} bits, got {}",
+                self.num_qubits,
+                bits.len()
             )));
         }
         let shadow = PyQuantumShadow::new(self.num_qubits, bits, clifford_index);
@@ -155,14 +173,17 @@ impl PyShadowCollector {
         if self.shadows.is_empty() {
             return 0.0;
         }
-        self.shadows.iter().map(|s| s.fidelity_estimate).sum::<f64>()
+        self.shadows
+            .iter()
+            .map(|s| s.fidelity_estimate)
+            .sum::<f64>()
             / self.shadows.len() as f64
     }
 
     /// Reconstructs the quantum state from the shadows
     ///
     /// Returns a dictionary with the density matrix estimate and metadata.
-    pub fn reconstruct<'py>(&self, py: Python<'py>) -> PyResult<&'py PyDict> {
+    pub fn reconstruct<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         let d = PyDict::new(py);
         let n = self.shadows.len();
 
@@ -180,13 +201,16 @@ impl PyShadowCollector {
         d.set_item("num_qubits", self.num_qubits)?;
         d.set_item("mean_fidelity", fid)?;
         d.set_item("statistical_certificate", cert)?;
-        d.set_item("reconstruction_quality", if fid >= self.reconstruction_threshold {
-            "HIGH"
-        } else if fid >= 0.7 {
-            "MEDIUM"
-        } else {
-            "LOW"
-        })?;
+        d.set_item(
+            "reconstruction_quality",
+            if fid >= self.reconstruction_threshold {
+                "HIGH"
+            } else if fid >= 0.7 {
+                "MEDIUM"
+            } else {
+                "LOW"
+            },
+        )?;
 
         Ok(d)
     }
@@ -200,7 +224,7 @@ impl PyShadowCollector {
     }
 
     /// Collector statistics
-    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<&'py PyDict> {
+    pub fn stats<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         let d = PyDict::new(py);
         d.set_item("num_qubits", self.num_qubits)?;
         d.set_item("shadows_collected", self.shadows.len())?;
