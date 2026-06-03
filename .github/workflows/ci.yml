@@ -163,7 +163,8 @@ jobs:
         run: pip install maturin
 
       - name: Compile PyO3 extension (kernel)
-        run: maturin develop --manifest-path kernel/Cargo.toml --features pyo3/extension-module
+        run: maturin build --manifest-path kernel/Cargo.toml --features pyo3/extension-module --out dist
+          python -m pip install dist/*.whl
 
       - name: Install Python SDK
         run: pip install -e frontend/
