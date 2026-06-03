@@ -1,3 +1,5 @@
+env:
+  PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
 # -----------------------------------------------------------------------------
 # LightQOS - Quantum Operating System
 # release.yml — Release pipeline — wheel build, PyPI and crates.io publish
