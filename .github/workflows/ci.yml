@@ -106,7 +106,9 @@ jobs:
         continue-on-error: true  # Do not block — mypy in incremental mode
 
       - name: Install Python SDK (without compiling Rust)
-        run: pip install -e frontend/ --no-build-isolation
+        run: |
+          python -m pip install -e frontend/
+          python -m pip install pytest pytest-cov pytest-asyncio --no-build-isolation
         continue-on-error: true
 
       - name: Python tests (without Rust kernel)
@@ -167,10 +169,12 @@ jobs:
           maturin build --manifest-path kernel/Cargo.toml --features pyo3/extension-module --out dist
           python -m pip install dist/*.whl
       - name: Install Python SDK
-        run: pip install -e frontend/
+        run: |
+          python -m pip install -e frontend/
+          python -m pip install pytest pytest-cov pytest-asyncio
 
       - name: PyO3 integration tests
-        run: pytest tests/test_pyo3_integration.py -v --tb=short
+        run: python -m pytest tests/test_pyo3_integration.py -v --tb=short
 
   # ==========================================================================
   # Benchmarks (only on main)
