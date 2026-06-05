@@ -51,14 +51,5 @@ criterion = "0.5"
 name = "emf_benchmark"
 harness = false
 
-[profile.release]
-opt-level = 3
-lto = true
-codegen-units = 1
-
-[profile.dev]
-opt-level = 0
-debug = true
-
 [build-dependencies]
 pyo3-build-config = "0.24.2"
