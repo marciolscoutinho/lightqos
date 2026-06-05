@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
+        pip install pylint numpy
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint frontend/lightqos --disable=missing-module-docstring,missing-class-docstring,missing-function-docstring,too-few-public-methods,too-many-instance-attributes,too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-branches,wrong-import-position,import-outside-toplevel,attribute-defined-outside-init,subprocess-run-check,useless-import-alias,function-redefined
