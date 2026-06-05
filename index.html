@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-PT" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LightQOS · Quantum OS Project</title>
+  <meta name="description" content="Página oficial do projeto LightQOS, um sistema operativo quântico experimental.">
+  <meta property="og:title" content="LightQOS · Quantum OS Project">
+  <meta property="og:description" content="Sistema operativo quântico experimental: Rust kernel, Python SDK, IA, drivers quânticos e arquitetura por camadas.">
+  <meta property="og:image" content="assets/lightqos-banner.jpeg">
+  <link rel="icon" href="assets/logo-os-web.png">
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem("lightqos-theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        }
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+  <div class="scanlines"></div>
+
+  <section class="boot" id="boot">
+    <div class="boot-card">
+      <img src="assets/logo-os-web.png" alt="LightQOS" class="boot-logo">
+      <div id="boot-lines" class="boot-lines"></div>
+      <button id="enter-btn" type="button">Entrar no projeto</button>
+    </div>
+  </section>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#top"><img src="assets/logo-os-web.png" alt="LightQOS"></a>
+    <nav id="nav"></nav>
+    <div class="header-actions">
+      <div class="language-switcher">
+        <button id="language-button" class="icon-button language-button" type="button" aria-expanded="false" aria-controls="language-menu">PT</button>
+        <div id="language-menu" class="language-menu" aria-hidden="true"></div>
+      </div>
+      <button id="theme-toggle" class="icon-button" type="button">◐</button>
+      <a id="repo-link" class="pill" href="https://github.com/marciolscoutinho/lightqos" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero hero-clean hero-stacked">
+      <div class="hero-top reveal">
+        <p class="eyebrow" id="hero-eyebrow"></p>
+        <h1 id="hero-title">LightQOS</h1>
+      </div>
+
+      <div class="hero-image-wrap reveal">
+        <img src="assets/quantum-operative-system-horizontal-panorama.png" alt="Quantum Operative System visual for LightQOS">
+      </div>
+
+      <div class="hero-bottom reveal">
+        <p class="tagline" id="hero-subtitle"></p>
+        <p class="hero-text" id="hero-text"></p>
+        <div class="badges">
+          <span id="badge-1"></span>
+          <span id="badge-2"></span>
+          <span id="badge-3"></span>
+          <span id="badge-4"></span>
+        </div>
+        <div class="hero-actions">
+          <a href="#arquitetura" id="hero-primary" class="primary"></a>
+          <a href="#instalacao" id="hero-secondary" class="secondary"></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="stats" class="stats"></section>
+
+    <section id="visao" class="section split">
+      <div class="section-head reveal"><p class="eyebrow">// vision</p><h2 id="vision-title"></h2><p id="vision-text"></p></div>
+      <article class="glass-card reveal"><h3 id="mission-title"></h3><p id="mission-text"></p></article>
+    </section>
+
+    <section id="arquitetura" class="section">
+      <div class="section-head reveal"><p class="eyebrow">// architecture</p><h2 id="architecture-title"></h2><p id="architecture-subtitle"></p></div>
+      <div id="architecture-cards-head" class="section-subhead reveal"></div>
+      <div id="architecture-cards" class="architecture-cards"></div>
+    </section>
+
+    <section id="modulos" class="section">
+      <div class="section-head reveal"><p class="eyebrow">// repository.modules</p><h2 id="modules-title"></h2><p id="modules-subtitle"></p></div>
+      <div id="modules-grid" class="cards-grid"></div>
+    </section>
+
+    <section id="tecnologia" class="section">
+      <div class="section-head reveal"><p class="eyebrow">// stack</p><h2 id="tech-title"></h2></div>
+      <div id="tech-cloud" class="tech-cloud reveal"></div>
+    </section>
+
+    <section id="exemplos" class="section split">
+      <div class="section-head reveal"><p class="eyebrow">// examples</p><h2 id="examples-title"></h2><p id="examples-subtitle"></p></div>
+      <div id="examples-list" class="code-list reveal"></div>
+    </section>
+
+    <section id="instalacao" class="section split">
+      <div class="section-head reveal"><p class="eyebrow">// quickstart</p><h2 id="install-title"></h2></div>
+      <div class="terminal large reveal"><div class="window-bar"><span></span><span></span><span></span></div><p id="terminal-title" class="prompt"></p><pre id="commands-output"></pre></div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop offset="0" stop-color="#071730"/><stop offset="1" stop-color="#0b2752"/>
+    </linearGradient>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0" stop-color="#17d9ff"/><stop offset="1" stop-color="#0b72ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" rx="28" fill="url(#bg)"/>
+  <rect x="70" y="70" width="500" height="220" rx="20" fill="#081f3f" stroke="#17d9ff" opacity=".9"/>
+  <path d="M240 108h88c29 0 44 14 44 41v28c0 27-15 41-44 41h-44v18c0 11 6 17 18 17h78" fill="none" stroke="url(#g1)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M400 252h-88c-29 0-44-14-44-41v-28c0-27 15-41 44-41h44v-18c0-11-6-17-18-17h-78" fill="none" stroke="#ffe65c" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="318" cy="157" r="8" fill="#ffe65c"/><circle cx="322" cy="205" r="8" fill="#17d9ff"/>
+  <text x="320" y="315" text-anchor="middle" fill="#dcefff" font-family="Inter, Arial" font-weight="700" font-size="28">Python SDK</text>
+</svg>

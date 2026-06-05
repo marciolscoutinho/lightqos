@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="28" fill="#071730"/>
+  <rect x="94" y="112" width="452" height="136" rx="20" fill="#081f3f" stroke="#17d9ff"/>
+  <rect x="122" y="140" width="110" height="80" rx="12" fill="#0b72ff" opacity=".28" stroke="#17d9ff"/>
+  <rect x="264" y="140" width="110" height="80" rx="12" fill="#17d9ff" opacity=".18" stroke="#17d9ff"/>
+  <rect x="406" y="140" width="110" height="80" rx="12" fill="#ffe65c" opacity=".16" stroke="#ffe65c"/>
+  <g stroke="#17d9ff" stroke-width="4">
+    <path d="M70 160h24"/><path d="M70 200h24"/><path d="M546 160h24"/><path d="M546 200h24"/>
+  </g>
+  <g fill="#dcefff" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" text-anchor="middle">
+    <text x="177" y="186">IBM</text>
+    <text x="319" y="186">IonQ</text>
+    <text x="461" y="186">QPU</text>
+  </g>
+  <text x="320" y="324" text-anchor="middle" fill="#dcefff" font-family="Inter, Arial" font-weight="700" font-size="28">Hardware Drivers & Simulator</text>
+</svg>

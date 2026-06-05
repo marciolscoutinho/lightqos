@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="28" fill="#071730"/>
+  <g transform="translate(320,170)">
+    <circle r="84" fill="#0a2448" stroke="#17d9ff" stroke-width="4"/>
+    <circle r="56" fill="#081a32" stroke="#ffe65c" stroke-width="3"/>
+    <g fill="none" stroke="#17d9ff" stroke-width="6">
+      <path d="M0-110V-86"/><path d="M78-78L61-61"/><path d="M110 0H86"/><path d="M78 78L61 61"/>
+      <path d="M0 110V86"/><path d="M-78 78l17-17"/><path d="M-110 0h24"/><path d="M-78-78l17 17"/>
+    </g>
+    <g fill="#ffe65c">
+      <circle cx="0" cy="-84" r="8"/><circle cx="60" cy="-60" r="8"/><circle cx="84" cy="0" r="8"/><circle cx="60" cy="60" r="8"/>
+      <circle cx="0" cy="84" r="8"/><circle cx="-60" cy="60" r="8"/><circle cx="-84" cy="0" r="8"/><circle cx="-60" cy="-60" r="8"/>
+    </g>
+    <text y="10" text-anchor="middle" fill="#dcefff" font-family="JetBrains Mono, monospace" font-size="22">Rust</text>
+  </g>
+  <text x="320" y="324" text-anchor="middle" fill="#dcefff" font-family="Inter, Arial" font-weight="700" font-size="28">Rust Kernel · PyO3 · Math</text>
+</svg>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-PT" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LightQOS · Founder</title>
+  <meta name="description" content="Founder page of LightQOS.">
+  <link rel="icon" href="assets/logo-os-web.png">
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem("lightqos-theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        }
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+  <div class="scanlines"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#top"><img src="assets/logo-os-web.png" alt="LightQOS"></a>
+    <nav id="nav"></nav>
+    <div class="header-actions">
+      <div class="language-switcher">
+        <button id="language-button" class="icon-button language-button" type="button" aria-expanded="false" aria-controls="language-menu">PT</button>
+        <div id="language-menu" class="language-menu" aria-hidden="true"></div>
+      </div>
+      <button id="theme-toggle" class="icon-button" type="button">◐</button>
+      <a id="repo-link" class="pill" href="https://github.com/marciolscoutinho/lightqos" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="founder-hero">
+      <div class="founder-photo reveal">
+        <img src="assets/me-lightqos-web.jpeg" alt="Founder of LightQOS">
+      </div>
+      <div class="founder-copy reveal">
+        <p class="eyebrow">// founder.profile</p>
+        <h1 id="founder-title">Founder</h1>
+        <p class="tagline">LightQOS</p>
+        <p id="founder-subtitle" class="hero-text"></p>
+        <div class="founder-bio">
+          <p id="founder-bio1"></p>
+          <p id="founder-bio2"></p>
+        </div>
+        <div class="hero-actions">
+          <a id="founder-cta" class="primary" target="_blank" rel="noreferrer"></a>
+          <a href="index.html#arquitetura" class="secondary">Architecture</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="28" fill="#071730"/>
+  <g transform="translate(140,68)">
+    <rect x="0" y="170" width="360" height="42" rx="18" fill="#08305d" stroke="#17d9ff"/>
+    <rect x="18" y="124" width="324" height="42" rx="18" fill="#0a2850" stroke="#1dc8ff"/>
+    <rect x="36" y="78" width="288" height="42" rx="18" fill="#0b2245" stroke="#49dfff"/>
+    <rect x="54" y="32" width="252" height="42" rx="18" fill="#0d1e3d" stroke="#ffe65c"/>
+    <text x="180" y="59" fill="#ffe65c" font-family="JetBrains Mono, monospace" font-size="18" text-anchor="middle">EFAL</text>
+    <text x="180" y="105" fill="#dcefff" font-family="JetBrains Mono, monospace" font-size="18" text-anchor="middle">EMF</text>
+    <text x="180" y="151" fill="#dcefff" font-family="JetBrains Mono, monospace" font-size="18" text-anchor="middle">TLM</text>
+    <text x="180" y="197" fill="#dcefff" font-family="JetBrains Mono, monospace" font-size="18" text-anchor="middle">HIO</text>
+  </g>
+  <text x="320" y="328" text-anchor="middle" fill="#dcefff" font-family="Inter, Arial" font-weight="700" font-size="28">Quantum Layers</text>
+</svg>
