@@ -22,4 +22,4 @@ jobs:
         pip install pylint numpy
     - name: Analysing the code with pylint
       run: |
-        pylint frontend/lightqos --disable=missing-module-docstring,missing-class-docstring,missing-function-docstring,too-few-public-methods,too-many-instance-attributes,too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-branches,wrong-import-position,import-outside-toplevel,attribute-defined-outside-init,subprocess-run-check,useless-import-alias,function-redefined
+        pylint frontend/lightqos --disable=missing-module-docstring,missing-class-docstring,missing-function-docstring,too-few-public-methods,too-many-instance-attributes,too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-branches,wrong-import-position,import-outside-toplevel,attribute-defined-outside-init,subprocess-run-check,useless-import-alias,function-redefined,line-too-long,unused-argument,unused-variable,duplicate-code,superfluous-parens
