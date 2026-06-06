@@ -574,7 +574,8 @@ def _lq_simulate(self, shots):
     return raw_counts
 
 
-def _lq_execute(self, backend="simulator", shots=1024, contract=None):
+def _lq_execute(self, backend="simulator", shots=1024, contract=None,
+    **kwargs):
     counts = _lq_simulate(self, int(shots))
     if contract is not None:
         contract.fulfilled = True

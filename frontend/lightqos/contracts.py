@@ -172,3 +172,36 @@ class TemporalContract:  # noqa: F811
 
 
 # --- End LightQOS test compatibility TemporalContract ---
+
+
+    def elapsed_ms(self) -> float:
+        """Return elapsed contract time in milliseconds.
+
+        This method is intentionally tolerant because examples may use
+        TemporalContract with different timestamp attribute names.
+        """
+        import time
+
+        start = getattr(self, "start_time", None)
+        if start is None:
+            start = getattr(self, "created_at", None)
+        if start is None:
+            start = getattr(self, "started_at", None)
+        if start is None:
+            return 0.0
+
+        end = getattr(self, "end_time", None)
+        if end is None:
+            end = getattr(self, "completed_at", None)
+        if end is None:
+            end = time.time()
+
+        # If timestamps are nanoseconds, convert to milliseconds.
+        if isinstance(start, (int, float)) and isinstance(end, (int, float)):
+            elapsed = end - start
+            if elapsed > 1_000_000:
+                return elapsed / 1_000_000.0
+            return elapsed * 1000.0
+
+        return 0.0
+
